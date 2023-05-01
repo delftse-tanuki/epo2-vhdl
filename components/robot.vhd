@@ -34,7 +34,9 @@ architecture structural of robot is
             clk   : in std_logic;
             reset : in std_logic;
 
-            sensor_data      : in std_logic_vector(2 downto 0);
+            sensor_data     : in std_logic_vector(2 downto 0);
+            next_checkpoint : in std_logic_vector(1 downto 0);
+            stop_checkpoint : in std_logic;
 
             motor_l_reset     : out std_logic;
             motor_l_direction : out std_logic;
@@ -62,14 +64,14 @@ architecture structural of robot is
         );
     end component motorcontrol;
 
-    signal sensor_data : std_logic_vector(2 downto 0);
-    signal count_out : std_logic_vector(19 downto 0);
+    signal sensor_data                      : std_logic_vector(2 downto 0);
+    signal count_out                        : std_logic_vector(19 downto 0);
     signal motor_l_reset, motor_l_direction : std_logic;
     signal motor_r_reset, motor_r_direction : std_logic;
 
 begin
 
-    comp1: inputbuffer
+    comp1 : inputbuffer
     port map(
         clk => clk,
 
@@ -85,7 +87,9 @@ begin
         clk   => clk,
         reset => reset,
 
-        sensor_data => sensor_data,
+        sensor_data     => sensor_data,
+        next_checkpoint => "00",
+        stop_checkpoint => '1',
 
         motor_l_reset     => motor_l_reset,
         motor_l_direction => motor_l_direction,
