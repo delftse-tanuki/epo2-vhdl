@@ -113,7 +113,7 @@ begin
                 motor_left_direction  <= '1';
                 motor_right_direction <= '0';
             end if;
-            if (checkpoint = '1' and sensor_data = "010") then
+            if (checkpoint = '1' and sensor_data = "101") then
                 checkpoint <= '0';
                 if (skip = '1') then
                     skip <= '0';
