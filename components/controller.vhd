@@ -47,8 +47,9 @@ begin
                 end if;
             elsif (sensor_data = "000") then
                 -- Checkpoint
+                checkpoint <= '1';
                 if (skip = '1') then
-                    checkpoint <= '1';
+                    -- Skip checkpoint
                 elsif (stop_checkpoint = '1') then
                     motor_left_reset  <= '1';
                     motor_right_reset <= '1';
@@ -114,7 +115,11 @@ begin
             end if;
             if (checkpoint = '1' and sensor_data = "010") then
                 checkpoint <= '0';
-                skip       <= '0';
+                if (skip = '1') then
+                    skip <= '0';
+                else
+                    skip <= '1';
+                end if;
             end if;
         end if;
     end process;
