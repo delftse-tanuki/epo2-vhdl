@@ -35,7 +35,7 @@ architecture structural of robot is
             reset : in std_logic;
 
             sensor_data     : in std_logic_vector(2 downto 0);
-            next_checkpoint : in std_logic_vector(1 downto 0);
+            next_direction  : in std_logic_vector(1 downto 0);
             stop_checkpoint : in std_logic;
 
             motor_l_reset     : out std_logic;
@@ -88,7 +88,7 @@ begin
         reset => reset,
 
         sensor_data     => sensor_data,
-        next_checkpoint => "00",
+        next_direction  => "00",
         stop_checkpoint => '1',
 
         motor_l_reset     => motor_l_reset,
