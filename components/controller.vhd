@@ -64,17 +64,17 @@ begin
                     motor_right_direction <= '0';
                 elsif (next_direction = "01") then
                     -- Left
-                    motor_left_reset      <= '1';
+                    motor_left_reset      <= '0';
                     motor_right_reset     <= '0';
+                    motor_left_direction  <= '0';
                     motor_right_direction <= '0';
-                    turning               <= '1';
                     skip_turn             <= '1';
                 elsif (next_direction = "10") then
                     -- Right
                     motor_left_reset      <= '0';
-                    motor_right_reset     <= '1';
+                    motor_right_reset     <= '0';
                     motor_left_direction  <= '1';
-                    turning               <= '1';
+                    motor_right_direction <= '1';
                     skip_turn             <= '1';
                 elsif (next_direction = "11") then
                     -- Backwards
@@ -82,6 +82,7 @@ begin
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '0';
                     motor_right_direction <= '0';
+						  turning 					<= '1';
                     skip_turn             <= '1';
                 end if;
             elsif (sensor_data = "001") then
