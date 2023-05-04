@@ -9,19 +9,22 @@ entity controller is
         sensor_data     : in std_logic_vector (2 downto 0);
         next_direction  : in std_logic_vector (1 downto 0); -- 00 = straight, 01 = left, 10 = right, 11 = backwards
         stop_checkpoint : in std_logic;
+        new_direction   : in std_logic;
 
         motor_l_reset     : out std_logic;
         motor_l_direction : out std_logic; -- 1 = forward, 0 = backwards
 
         motor_r_reset     : out std_logic;
-        motor_r_direction : out std_logic -- 0 = forward, 1 = backwards
+        motor_r_direction : out std_logic; -- 0 = forward, 1 = backwards
+
+        ask_next_direction : out std_logic
     );
 end entity controller;
 
 architecture behavioural of controller is
 
-    signal motor_left_reset, motor_right_reset                             : std_logic := '0';
-    signal motor_left_direction, motor_right_direction                     : std_logic := '0';
+    signal motor_left_reset, motor_right_reset             : std_logic := '0';
+    signal motor_left_direction, motor_right_direction     : std_logic := '0';
     signal turning, skip_checkpoint, checkpoint, skip_turn : std_logic := '0';
 
 begin
@@ -82,7 +85,7 @@ begin
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '0';
                     motor_right_direction <= '0';
-						  turning 					<= '1';
+                    turning               <= '1';
                     skip_turn             <= '1';
                 end if;
             elsif (sensor_data = "001") then
@@ -124,8 +127,12 @@ begin
                 if (skip_checkpoint = '1') then
                     skip_checkpoint <= '0';
                 else
-                    skip_checkpoint <= '1';
+                    skip_checkpoint    <= '1';
+                    ask_next_direction <= '1';
                 end if;
+            end if;
+            if (new_direction = '1') then
+                ask_next_direction <= '0';
             end if;
         end if;
     end process;
