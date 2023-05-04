@@ -20,9 +20,9 @@ end entity controller;
 
 architecture behavioural of controller is
 
-    signal motor_left_reset, motor_right_reset         : std_logic := '0';
-    signal motor_left_direction, motor_right_direction : std_logic := '0';
-    signal turning, double_turning, skip, checkpoint   : std_logic := '0';
+    signal motor_left_reset, motor_right_reset                             : std_logic := '0';
+    signal motor_left_direction, motor_right_direction                     : std_logic := '0';
+    signal turning, double_turning, skip_checkpoint, checkpoint, skip_turn : std_logic := '0';
 
 begin
 
@@ -34,21 +34,26 @@ begin
                 motor_right_reset <= '1';
                 turning           <= '0';
                 double_turning    <= '0';
-                skip              <= '1';
+                skip_checkpoint   <= '0';
                 checkpoint        <= '0';
+                skip_checkpoint   <= '0';
             elsif (double_turning = '1') then
                 if (sensor_data = "100") then
                     turning        <= '1';
                     double_turning <= '0';
                 end if;
             elsif (turning = '1') then
-                if (sensor_data = "011" or sensor_data = "110") then
+                if (skip_turn = '1') then
+                    if (sensor_data = "111") then
+                        skip_turn <= '0';
+                    end if;
+                elsif (sensor_data = "011" or sensor_data = "110") then
                     turning <= '0';
                 end if;
             elsif (sensor_data = "000") then
                 -- Checkpoint
                 checkpoint <= '1';
-                if (skip = '1') then
+                if (skip_checkpoint = '1') then
                     -- Skip checkpoint
                     motor_left_reset      <= '0';
                     motor_right_reset     <= '0';
@@ -70,6 +75,7 @@ begin
                     motor_l_direction     <= '0';
                     motor_right_direction <= '0';
                     turning               <= '1';
+                    skip_turn             <= '1';
                 elsif (next_direction = "10") then
                     -- Right
                     motor_left_reset      <= '0';
@@ -77,6 +83,7 @@ begin
                     motor_left_direction  <= '1';
                     motor_right_direction <= '1';
                     turning               <= '1';
+                    skip_turn             <= '1';
                 elsif (next_direction = "11") then
                     -- Backwards
                     motor_left_reset      <= '0';
@@ -84,6 +91,7 @@ begin
                     motor_left_direction  <= '0';
                     motor_right_direction <= '0';
                     double_turning        <= '1';
+                    skip_turn             <= '1';
                 end if;
             elsif (sensor_data = "001") then
                 motor_left_reset      <= '1';
@@ -121,10 +129,10 @@ begin
             end if;
             if (checkpoint = '1' and sensor_data = "101") then
                 checkpoint <= '0';
-                if (skip = '1') then
-                    skip <= '0';
+                if (skip_checkpoint = '1') then
+                    skip_checkpoint <= '0';
                 else
-                    skip <= '1';
+                    skip_checkpoint <= '1';
                 end if;
             end if;
         end if;
