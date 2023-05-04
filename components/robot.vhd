@@ -88,8 +88,8 @@ begin
         reset => reset,
 
         sensor_data     => sensor_data,
-        next_direction  => "00",
-        stop_checkpoint => '1',
+        next_direction  => "01",
+        stop_checkpoint => '0',
 
         motor_l_reset     => motor_l_reset,
         motor_l_direction => motor_l_direction,
