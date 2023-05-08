@@ -137,6 +137,9 @@ begin
         end if;
     end process;
 
+
+
+
     motor_l_reset <= motor_left_reset;
     motor_r_reset <= motor_right_reset;
 
