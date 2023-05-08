@@ -26,6 +26,10 @@ architecture behavioural of controller is
     signal motor_left_reset, motor_right_reset             : std_logic := '0';
     signal motor_left_direction, motor_right_direction     : std_logic := '0';
     signal turning, skip_checkpoint, checkpoint, skip_turn : std_logic := '0';
+    type direction_state is (forward_1, right_1, left_1, left_2, right_2, backward, forward_2);
+    signal state, next_state                               : direction_state;
+    signal fsm_direction                                   : std_logic_vector(1 downto 0); -- Direction signal in de if statements moet nog hiernaar worden aangepast.
+
 
 begin
 
@@ -136,6 +140,51 @@ begin
             end if;
         end if;
     end process;
+
+    process(state)
+    begin
+        case state is 
+            when forward_1 =>
+            fsm_direction <= "00";
+            next_state <= right_1;
+
+            when right_1 =>
+            fsm_direction <= "10";
+            next_state <= left_1;
+
+            when left_1 => 
+            fsm_direction <= "01";
+            next_state <= left_2;
+
+            when left_2 =>
+            fsm_direction <= "01";
+            next_state <= right_2;
+
+            when right_2 =>
+            fsm_direction <= "10";
+            next_state <= backward;
+
+            when backward =>
+            fsm_direction <= "11";
+            next_state <= forward_2;
+
+            when forward_2 =>
+            fsm_direction <= "00";
+            next_state <= forward_2;
+        end case;
+    end process;
+
+    process(reset, ask_next_direction) --update de state als the main controller een nieuwe value voor direction wil.
+    begin
+        if (reset = '1') then
+            state <= forward_1;
+        elsif (ask_next_direction = '1') then
+            state <= next_state;
+        end if;
+    end process;
+
+
+
 
     motor_l_reset <= motor_left_reset;
     motor_r_reset <= motor_right_reset;
