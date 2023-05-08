@@ -99,7 +99,7 @@ begin
         motor_l_direction => motor_l_direction,
 
         motor_r_reset     => motor_r_reset,
-        motor_r_direction => motor_r_direction
+        motor_r_direction => motor_r_direction,
 
         ask_next_direction => open
     );
