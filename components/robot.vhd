@@ -16,8 +16,6 @@ entity robot is
 end entity robot;
 
 architecture structural of robot is
-
-    
     component inputbuffer is
         port (
             clk : in std_logic;
@@ -68,67 +66,85 @@ architecture structural of robot is
         );
     end component motorcontrol;
 
-    signal sensor_data                      : std_logic_vector(2 downto 0);
-    signal count_out                        : std_logic_vector(19 downto 0);
-    signal motor_l_reset, motor_l_direction : std_logic;
-    signal motor_r_reset, motor_r_direction : std_logic;
-    type direction_state is (forward_1, right_1, left_1, left_2, right_2, backward_1, forward_2, forward_3, backward_2);
-    signal state, next_state                               : direction_state;
+    type direction_state is (
+        forward_1,
+        right_1,
+        left_1,
+        left_2,
+        right_2,
+        backward_1,
+        forward_2,
+        forward_3,
+        backward_2,
+        forward_4
+    );
 
-
+    signal sensor_data                       : std_logic_vector(2 downto 0);
+    signal count_out                         : std_logic_vector(19 downto 0);
+    signal motor_l_reset, motor_l_direction  : std_logic;
+    signal motor_r_reset, motor_r_direction  : std_logic;
+    signal state, next_state                 : direction_state;
+    signal next_direction                    : std_logic_vector(1 downto 0);
+    signal new_direction, ask_next_direction : std_logic;
 begin
 
-    process(state)
+    process (state)
     begin
-        case state is 
+        case state is
             when forward_1 =>
-            new_direction <= "00";
-            next_state <= right_1;
+                next_direction <= "00";
+                next_state     <= right_1;
 
             when right_1 =>
-            new_direction <= "10";
-            next_state <= left_1;
+                next_direction <= "10";
+                next_state     <= left_1;
 
-            when left_1 => 
-            new_direction <= "01";
-            next_state <= left_2;
+            when left_1 =>
+                next_direction <= "01";
+                next_state     <= left_2;
 
             when left_2 =>
-            new_direction <= "01";
-            next_state <= right_2;
+                next_direction <= "01";
+                next_state     <= right_2;
 
             when right_2 =>
-            new_direction <= "10";
-            next_state <= backward;
+                next_direction <= "10";
+                next_state     <= backward_1;
 
-            when backward =>
-            new_direction <= "11";
-            next_state <= forward_2;
+            when backward_1 =>
+                next_direction <= "11";
+                next_state     <= forward_2;
 
             when forward_2 =>
-            new_direction <= "00";
-            next_state <= forward_3;
+                next_direction <= "00";
+                next_state     <= forward_3;
 
             when forward_3 =>
-            new_direction <= "00";
-            next_state <= forward_4;
+                next_direction <= "00";
+                next_state     <= forward_4;
 
             when forward_4 =>
-            new_direction <= "00";
-            next_state <= backward_2;
+                next_direction <= "00";
+                next_state     <= backward_2;
 
             when backward_2 =>
-            new_direction <= "11";
-            next_state <= forward_1
+                next_direction <= "11";
+                next_state     <= forward_1;
+
         end case;
     end process;
 
-    process(reset, ask_next_direction) --update de state als the main controller een nieuwe value voor direction wil.
+    process (clk) --update de state als the main controller een nieuwe value voor direction wil.
     begin
-        if (reset = '1') then
-            state <= forward_1;
-        elsif (ask_next_direction = '1') then
-            state <= next_state;
+        if (rising_edge(clk)) then
+            if (reset = '1') then
+                state <= forward_1;
+            elsif (ask_next_direction = '1') then
+                state         <= next_state;
+                new_direction <= '1';
+            else
+                new_direction <= '0';
+            end if;
         end if;
     end process;
 
