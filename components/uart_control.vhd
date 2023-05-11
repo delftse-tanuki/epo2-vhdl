@@ -11,12 +11,15 @@ entity uart_control is
         next_direction : out std_logic_vector(1 downto 0);
         new_direction  : out std_logic;
         stop_station   : out std_logic;
-        led0           : out std_logic
+
+        tx   : out std_logic;
+        rx   : in std_logic;
+        led0 : out std_logic
     );
 end entity uart_control;
 
 architecture behavioural of uart_control is
-    constant STRAIGHT_DIRECTION   : std_logic_vector(7 downto 0) := "00000000";
+    constant STRAIGHT_DIRECTION  : std_logic_vector(7 downto 0) := "00000000";
     constant LEFT_DIRECTION      : std_logic_vector(7 downto 0) := "00000001";
     constant RIGHT_DIRECTION     : std_logic_vector(7 downto 0) := "00000010";
     constant BACKWARDS_DIRECTION : std_logic_vector(7 downto 0) := "00000011";
@@ -28,6 +31,9 @@ architecture behavioural of uart_control is
 
             data_in  : in std_logic_vector(7 downto 0);
             data_out : out std_logic_vector(7 downto 0);
+
+            tx : out std_logic;
+            rx : in std_logic;
         );
     end component uart;
 
@@ -39,7 +45,10 @@ begin
         reset => reset,
 
         data_in  => data_in,
-        data_out => data_out
+        data_out => data_out,
+
+        tx => tx,
+        rx => rx
     );
 
     process (clk, reset)

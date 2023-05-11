@@ -11,7 +11,11 @@ entity robot is
         sensor_r_in : in std_logic;
 
         motor_l_pwm : out std_logic;
-        motor_r_pwm : out std_logic
+        motor_r_pwm : out std_logic;
+
+        rx   : in std_logic;
+        tx   : out std_logic;
+        led0 : out std_logic
     );
 end entity robot;
 
@@ -74,7 +78,10 @@ architecture structural of robot is
 
             next_direction : out std_logic_vector(1 downto 0);
             new_direction  : out std_logic;
-            stop_station   : out std_logic
+            stop_station   : out std_logic;
+            tx             : out std_logic;
+            rx             : in std_logic;
+            led0           : out std_logic
         );
     end component uart_control;
 
@@ -84,6 +91,7 @@ architecture structural of robot is
     signal motor_r_reset, motor_r_direction                : std_logic;
     signal next_direction                                  : std_logic_vector(1 downto 0);
     signal new_direction, ask_next_direction, stop_station : std_logic;
+    signal tx, rx, led0                                    : std_logic;
 begin
 
     comp1 : inputbuffer
@@ -131,7 +139,11 @@ begin
 
         next_direction => next_direction,
         new_direction  => new_direction,
-        stop_station   => stop_station
+        stop_station   => stop_station,
+
+        tx   => tx,
+        rx   => rx,
+        led0 => led0
     );
 
     motorcontrol_l : motorcontrol
