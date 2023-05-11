@@ -33,10 +33,10 @@ architecture structural of robot is
             clk   : in std_logic;
             reset : in std_logic;
 
-            sensor_data     : in std_logic_vector(2 downto 0);
-            next_direction  : in std_logic_vector(1 downto 0);
-            stop_station : in std_logic;
-            new_direction   : in std_logic;
+            sensor_data    : in std_logic_vector(2 downto 0);
+            next_direction : in std_logic_vector(1 downto 0);
+            stop_station   : in std_logic;
+            new_direction  : in std_logic;
 
             motor_l_reset     : out std_logic;
             motor_l_direction : out std_logic;
@@ -66,87 +66,25 @@ architecture structural of robot is
         );
     end component motorcontrol;
 
-    type direction_state is (
-        forward_1,
-        right_1,
-        left_1,
-        left_2,
-        right_2,
-        backward_1,
-        forward_2,
-        forward_3,
-        backward_2,
-        forward_4
-    );
+    component uart_control is
+        port (
+            clk                : in std_logic;
+            reset              : in std_logic;
+            ask_next_direction : in std_logic;
 
-    signal sensor_data                       : std_logic_vector(2 downto 0);
-    signal count_out                         : std_logic_vector(19 downto 0);
-    signal motor_l_reset, motor_l_direction  : std_logic;
-    signal motor_r_reset, motor_r_direction  : std_logic;
-    signal state, next_state                 : direction_state;
-    signal next_direction                    : std_logic_vector(1 downto 0);
-    signal new_direction, ask_next_direction : std_logic;
+            next_direction : out std_logic_vector(1 downto 0);
+            new_direction  : out std_logic;
+            stop_station   : out std_logic
+        );
+    end component uart_control;
+
+    signal sensor_data                                     : std_logic_vector(2 downto 0);
+    signal count_out                                       : std_logic_vector(19 downto 0);
+    signal motor_l_reset, motor_l_direction                : std_logic;
+    signal motor_r_reset, motor_r_direction                : std_logic;
+    signal next_direction                                  : std_logic_vector(1 downto 0);
+    signal new_direction, ask_next_direction, stop_station : std_logic;
 begin
-
-    process (state)
-    begin
-        case state is
-            when forward_1 =>
-                next_direction <= "00";
-                next_state     <= right_1;
-
-            when right_1 =>
-                next_direction <= "10";
-                next_state     <= left_1;
-
-            when left_1 =>
-                next_direction <= "01";
-                next_state     <= left_2;
-
-            when left_2 =>
-                next_direction <= "01";
-                next_state     <= right_2;
-
-            when right_2 =>
-                next_direction <= "10";
-                next_state     <= backward_1;
-
-            when backward_1 =>
-                next_direction <= "11";
-                next_state     <= forward_2;
-
-            when forward_2 =>
-                next_direction <= "00";
-                next_state     <= forward_3;
-
-            when forward_3 =>
-                next_direction <= "00";
-                next_state     <= forward_4;
-
-            when forward_4 =>
-                next_direction <= "00";
-                next_state     <= backward_2;
-
-            when backward_2 =>
-                next_direction <= "11";
-                next_state     <= forward_1;
-
-        end case;
-    end process;
-
-    process (clk) --update de state als the main controller een nieuwe value voor direction wil.
-    begin
-        if (rising_edge(clk)) then
-            if (reset = '1') then
-                state <= forward_1;
-            elsif (ask_next_direction = '1') then
-                state         <= next_state;
-                new_direction <= '1';
-            else
-                new_direction <= '0';
-            end if;
-        end if;
-    end process;
 
     comp1 : inputbuffer
     port map(
@@ -164,10 +102,10 @@ begin
         clk   => clk,
         reset => reset,
 
-        sensor_data     => sensor_data,
-        next_direction  => "01",
-        stop_station => '0',
-        new_direction   => '0',
+        sensor_data    => sensor_data,
+        next_direction => next_direction,
+        stop_station   => stop_station,
+        new_direction  => new_direction,
 
         motor_l_reset     => motor_l_reset,
         motor_l_direction => motor_l_direction,
@@ -175,7 +113,7 @@ begin
         motor_r_reset     => motor_r_reset,
         motor_r_direction => motor_r_direction,
 
-        ask_next_direction => open
+        ask_next_direction => ask_next_direction
     );
 
     comp3 : timebase
@@ -183,6 +121,17 @@ begin
         clk       => clk,
         reset     => reset,
         count_out => count_out
+    );
+
+    comp4 : uart_control
+    port map(
+        clk                => clk,
+        reset              => reset,
+        ask_next_direction => ask_next_direction,
+
+        next_direction => next_direction,
+        new_direction  => new_direction,
+        stop_station   => stop_station
     );
 
     motorcontrol_l : motorcontrol
