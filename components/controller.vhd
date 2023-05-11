@@ -56,9 +56,6 @@ begin
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '1';
                     motor_right_direction <= '0';
-                elsif (stop_station = '1') then
-                    motor_left_reset  <= '1';
-                    motor_right_reset <= '1';
                 elsif (next_direction = "00") then
                     -- Straight
                     motor_left_reset      <= '0';
