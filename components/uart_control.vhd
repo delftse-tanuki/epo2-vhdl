@@ -20,9 +20,26 @@ architecture behavioural of uart_control is
     constant RIGHT_DIRECTION     : std_logic_vector(7 downto 0) := "00000010";
     constant BACKWARDS_DIRECTION : std_logic_vector(7 downto 0) := "00000011";
 
+    component uart is
+        port (
+            clk   : in std_logic;
+            reset : in std_logic;
+
+            data_in  : in std_logic_vector(7 downto 0);
+            data_out : out std_logic_vector(7 downto 0)
+        );
+    end component uart;
+
     signal data_in, data_out : std_logic_vector(7 downto 0);
 begin
-    next_direction <= "00";
+    uart_inst : uart
+        port map (
+            clk   => clk,
+            reset => reset,
+
+            data_in  => data_in,
+            data_out => data_out
+        );
 
     process (clk, reset)
     begin
@@ -38,6 +55,8 @@ begin
                     next_direction <= "10";
                 elsif (data_out = BACKWARDS_DIRECTION) then
                     next_direction <= "11";
+                else 
+                    next_direction <= "00";
                 end if;
             end if;
         end if;
