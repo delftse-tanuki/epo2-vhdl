@@ -16,7 +16,7 @@ entity uart_control is
 end entity uart_control;
 
 architecture behavioural of uart_control is
-    constant STRAIGT_DIRECTION   : std_logic_vector(7 downto 0) := "00000000";
+    constant STRAIGHT_DIRECTION   : std_logic_vector(7 downto 0) := "00000000";
     constant LEFT_DIRECTION      : std_logic_vector(7 downto 0) := "00000001";
     constant RIGHT_DIRECTION     : std_logic_vector(7 downto 0) := "00000010";
     constant BACKWARDS_DIRECTION : std_logic_vector(7 downto 0) := "00000011";
@@ -48,7 +48,7 @@ begin
             if (reset = '1') then
                 data_in <= (others => '0');
             elsif (ask_next_direction = '1') then
-                if (data_out = STRAIGT_DIRECTION) then
+                if (data_out = STRAIGHT_DIRECTION) then
                     next_direction <= "00";
                     led0           <= '0';
                 elsif (data_out = LEFT_DIRECTION) then
