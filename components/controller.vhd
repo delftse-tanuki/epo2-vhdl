@@ -122,12 +122,14 @@ begin
                     motor_left_reset  <= '1';
                     motor_right_reset <= '1';
                 else
+                    -- Turn 180° and reset skip_checkpoint
                     motor_left_reset      <= '0';
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '0';
                     motor_right_direction <= '0';
                     turning               <= '1';
                     skip_turn             <= '1';
+                    skip_checkpoint       <= '0';
                 end if;
             end if;
             if (checkpoint = '1' and sensor_data = "101") then
