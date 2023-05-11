@@ -3,12 +3,6 @@ use IEEE.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity uart_control is
-    generic (
-        STRAIGT_DIRECTION   : std_logic_vector(7 downto 0) := "00000000";
-        LEFT_DIRECTION      : std_logic_vector(7 downto 0) := "00000001";
-        RIGHT_DIRECTION     : std_logic_vector(7 downto 0) := "00000010";
-        BACKWARDS_DIRECTION : std_logic_vector(7 downto 0) := "00000011"
-    );
     port (
         clk       : in std_logic;
         reset     : in std_logic;
@@ -19,9 +13,14 @@ entity uart_control is
 end entity uart_control;
 
 architecture behavioural of uart_control is
+    constant STRAIGT_DIRECTION   : std_logic_vector(7 downto 0) := "00000000";
+    constant LEFT_DIRECTION      : std_logic_vector(7 downto 0) := "00000001";
+    constant RIGHT_DIRECTION     : std_logic_vector(7 downto 0) := "00000010";
+    constant BACKWARDS_DIRECTION : std_logic_vector(7 downto 0) := "00000011";
 
 begin
     next_direction <= "00";
+
     process (clk, reset)
     begin
         if (rising_edge(clk)) then
