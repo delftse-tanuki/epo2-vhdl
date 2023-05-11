@@ -33,7 +33,7 @@ architecture behavioural of uart_control is
             data_out : out std_logic_vector(7 downto 0);
 
             tx : out std_logic;
-            rx : in std_logic;
+            rx : in std_logic
         );
     end component uart;
 
