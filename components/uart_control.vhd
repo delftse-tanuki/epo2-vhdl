@@ -10,7 +10,8 @@ entity uart_control is
 
         next_direction : out std_logic_vector(1 downto 0);
         new_direction  : out std_logic;
-        stop_station   : out std_logic
+        stop_station   : out std_logic;
+        led0           : out std_logic
     );
 end entity uart_control;
 
@@ -26,20 +27,20 @@ architecture behavioural of uart_control is
             reset : in std_logic;
 
             data_in  : in std_logic_vector(7 downto 0);
-            data_out : out std_logic_vector(7 downto 0)
+            data_out : out std_logic_vector(7 downto 0);
         );
     end component uart;
 
     signal data_in, data_out : std_logic_vector(7 downto 0);
 begin
     uart_inst : uart
-        port map (
-            clk   => clk,
-            reset => reset,
+    port map(
+        clk   => clk,
+        reset => reset,
 
-            data_in  => data_in,
-            data_out => data_out
-        );
+        data_in  => data_in,
+        data_out => data_out
+    );
 
     process (clk, reset)
     begin
@@ -49,14 +50,19 @@ begin
             elsif (ask_next_direction = '1') then
                 if (data_out = STRAIGT_DIRECTION) then
                     next_direction <= "00";
+                    led0           <= '0';
                 elsif (data_out = LEFT_DIRECTION) then
                     next_direction <= "01";
+                    led0           <= '0';
                 elsif (data_out = RIGHT_DIRECTION) then
                     next_direction <= "10";
+                    led0           <= '0';
                 elsif (data_out = BACKWARDS_DIRECTION) then
                     next_direction <= "11";
-                else 
+                    led0           <= '1';
+                else
                     next_direction <= "00";
+                    led0           <= '0';
                 end if;
             end if;
         end if;
