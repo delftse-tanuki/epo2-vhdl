@@ -6,10 +6,10 @@ entity controller is
         clk   : in std_logic;
         reset : in std_logic;
 
-        sensor_data     : in std_logic_vector (2 downto 0);
-        next_direction  : in std_logic_vector (1 downto 0); -- 00 = straight, 01 = left, 10 = right, 11 = backwards
-        stop_station : in std_logic;
-        new_direction   : in std_logic;
+        sensor_data    : in std_logic_vector (2 downto 0);
+        next_direction : in std_logic_vector (1 downto 0); -- 00 = straight, 01 = left, 10 = right, 11 = backwards
+        stop_station   : in std_logic;
+        new_direction  : in std_logic;
 
         motor_l_reset     : out std_logic;
         motor_l_direction : out std_logic; -- 1 = forward, 0 = backwards
@@ -117,10 +117,18 @@ begin
                 motor_left_direction  <= '1';
                 motor_right_direction <= '1';
             elsif (sensor_data = "111") then
-                motor_left_reset      <= '0';
-                motor_right_reset     <= '0';
-                motor_left_direction  <= '1';
-                motor_right_direction <= '0';
+                --Station
+                if (stop_station = '1') then
+                    motor_left_reset  <= '1';
+                    motor_right_reset <= '1';
+                else
+                    motor_left_reset      <= '0';
+                    motor_right_reset     <= '0';
+                    motor_left_direction  <= '0';
+                    motor_right_direction <= '0';
+                    turning               <= '1';
+                    skip_turn             <= '1';
+                end if;
             end if;
             if (checkpoint = '1' and sensor_data = "101") then
                 checkpoint <= '0';
@@ -136,10 +144,6 @@ begin
             end if;
         end if;
     end process;
-
-
-
-
     motor_l_reset <= motor_left_reset;
     motor_r_reset <= motor_right_reset;
 
