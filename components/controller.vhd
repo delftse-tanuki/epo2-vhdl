@@ -38,7 +38,7 @@ begin
                 turning           <= '0';
                 skip_checkpoint   <= '0';
                 checkpoint        <= '0';
-                skip_checkpoint   <= '0';
+                skip_turn         <= '0';
             elsif (turning = '1') then
                 if (skip_turn = '1') then
                     if (sensor_data = "111") then
@@ -143,6 +143,7 @@ begin
             end if;
         end if;
     end process;
+
     motor_l_reset <= motor_left_reset;
     motor_r_reset <= motor_right_reset;
 
