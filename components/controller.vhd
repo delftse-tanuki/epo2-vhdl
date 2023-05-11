@@ -8,7 +8,7 @@ entity controller is
 
         sensor_data     : in std_logic_vector (2 downto 0);
         next_direction  : in std_logic_vector (1 downto 0); -- 00 = straight, 01 = left, 10 = right, 11 = backwards
-        stop_checkpoint : in std_logic;
+        stop_station : in std_logic;
         new_direction   : in std_logic;
 
         motor_l_reset     : out std_logic;
@@ -56,7 +56,7 @@ begin
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '1';
                     motor_right_direction <= '0';
-                elsif (stop_checkpoint = '1') then
+                elsif (stop_station = '1') then
                     motor_left_reset  <= '1';
                     motor_right_reset <= '1';
                 elsif (next_direction = "00") then
