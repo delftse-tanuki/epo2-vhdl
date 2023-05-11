@@ -57,6 +57,7 @@ begin
             if (reset = '1') then
                 data_in <= (others => '0');
             elsif (ask_next_direction = '1') then
+                data_in <= "00100000";
                 if (data_out = STRAIGHT_DIRECTION) then
                     next_direction <= "00";
                     led0           <= '0';

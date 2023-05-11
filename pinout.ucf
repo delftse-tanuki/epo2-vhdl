@@ -8,3 +8,4 @@ NET "motor_r_pwm" LOC = "B9" ; # servo right
 NET "rx" LOC = "A10" ; # xbee out ( received data )
 NET "tx" LOC = "C9" ; # xbee in ( data to send )
 NET "led0" LOC = "M5";
+NET "led1" LOC = "M11";
