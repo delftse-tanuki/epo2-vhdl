@@ -5,3 +5,5 @@ NET "sensor_m_in" LOC = "J3" ;
 NET "sensor_r_in" LOC = "A3" ;
 NET "motor_l_pwm" LOC = "A9" ; # servo left
 NET "motor_r_pwm" LOC = "B9" ; # servo right
+NET "rx" LOC = "A10" ; # xbee out ( received data )
+NET "tx" LOC = "C9" ; # xbee in ( data to send )
