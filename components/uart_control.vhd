@@ -25,6 +25,9 @@ architecture behavioural of uart_control is
     constant BACKWARDS_DIRECTION : std_logic_vector(7 downto 0) := "00000011";
 
     component uart is
+        generic (
+            FREQ_SCALE : integer := 1
+        );
         port (
             clk   : in std_logic;
             reset : in std_logic;
@@ -32,12 +35,19 @@ architecture behavioural of uart_control is
             data_in  : in std_logic_vector(7 downto 0);
             data_out : out std_logic_vector(7 downto 0);
 
+            buffer_empty : out std_logic;
+            data_ready   : out std_logic;
+
+            read  : in std_logic;
+            write : in std_logic;
+
             tx : out std_logic;
             rx : in std_logic
         );
     end component uart;
 
     signal data_in, data_out : std_logic_vector(7 downto 0);
+    signal data_ready        : std_logic;
 begin
     uart_inst : uart
     port map(
@@ -46,6 +56,12 @@ begin
 
         data_in  => data_in,
         data_out => data_out,
+
+        data_ready   => data_ready,
+        buffer_empty => open,
+
+        read  => data_ready,
+        write => '0',
 
         tx => tx,
         rx => rx
