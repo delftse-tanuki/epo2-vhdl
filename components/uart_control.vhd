@@ -46,8 +46,9 @@ architecture behavioural of uart_control is
         );
     end component uart;
 
-    signal data_in, data_out : std_logic_vector(7 downto 0);
-    signal data_ready, write : std_logic;
+    signal data_in, data_out        : std_logic_vector(7 downto 0);
+    signal data_ready, write        : std_logic;
+    signal new_direction_s, written : std_logic;
 begin
     uart_inst : uart
     port map(
@@ -70,10 +71,13 @@ begin
     process (clk, ask_next_direction, write)
     begin
         if (rising_edge(clk)) then
-            if (write = '1') then
-                write <= '0';
+            if (write = '1' and written = '0') then
+                write   <= '0';
+                written <= '1';
             elsif (ask_next_direction = '1') then
                 write <= '1';
+            elsif (ask_next_direction = '0') then
+                written <= '0';
             end if;
         end if;
     end process;
@@ -105,6 +109,15 @@ begin
         end if;
     end process;
 
-    new_direction <= '0';
+    process (clk, data_ready, write)
+    begin
+        if (data_ready = '1') then
+            new_direction_s <= '1';
+        elsif (write = '1') then
+            new_direction_s <= '0';
+        end if;
+    end process;
+
+    new_direction <= new_direction_s;
     stop_station  <= '0';
 end architecture;
