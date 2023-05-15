@@ -3,5 +3,7 @@ NET "reset" LOC = "P11"; # BTN3 used for reset
 NET "sensor_l_in" LOC = "B5" ;
 NET "sensor_m_in" LOC = "J3" ;
 NET "sensor_r_in" LOC = "A3" ;
+NET "sensor_mine" LOC = "P12" ; # minedetector input
 NET "motor_l_pwm" LOC = "A9" ; # servo left
 NET "motor_r_pwm" LOC = "B9" ; # servo right
+NET "ledm" LOC = "P6" ; # led

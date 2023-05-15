@@ -11,6 +11,8 @@ entity controller is
         stop_station   : in std_logic;
         new_direction  : in std_logic;
 
+        mine_detected  : in std_logic;
+
         motor_l_reset     : out std_logic;
         motor_l_direction : out std_logic; -- 1 = forward, 0 = backwards
 
@@ -47,6 +49,13 @@ begin
                 elsif (sensor_data = "011" or sensor_data = "110") then
                     turning <= '0';
                 end if;
+            elsif (mine_detected = '1') then
+                motor_left_reset      <= '0';
+                motor_right_reset     <= '0';
+                motor_left_direction  <= '0';
+                motor_right_direction <= '0';
+                turning               <= '1';
+                skip_turn             <= '1';
             elsif (sensor_data = "000") then
                 -- Checkpoint
                 checkpoint <= '1';
@@ -85,6 +94,7 @@ begin
                     turning               <= '1';
                     skip_turn             <= '1';
                 end if;
+                            
             elsif (sensor_data = "001") then
                 motor_left_reset      <= '1';
                 motor_right_reset     <= '0';
@@ -141,6 +151,8 @@ begin
             if (new_direction = '1') then
                 ask_next_direction <= '0';
             end if;
+            
+                
         end if;
     end process;
 
