@@ -12,9 +12,8 @@ entity uart_control is
         new_direction  : out std_logic;
         stop_station   : out std_logic;
 
-        tx   : out std_logic;
-        rx   : in std_logic;
-        led0 : out std_logic
+        tx : out std_logic;
+        rx : in std_logic
     );
 end entity uart_control;
 
@@ -46,9 +45,11 @@ architecture behavioural of uart_control is
         );
     end component uart;
 
-    signal data_in, data_out        : std_logic_vector(7 downto 0);
-    signal data_ready, write        : std_logic;
-    signal new_direction_s, written : std_logic;
+    type state_type is (asked, recieved, executed);
+
+    signal data_in, data_out : std_logic_vector(7 downto 0);
+    signal data_ready, write : std_logic;
+    signal state, next_state : state_type := recieved;
 begin
     uart_inst : uart
     port map(
@@ -68,56 +69,47 @@ begin
         rx => rx
     );
 
-    process (clk, ask_next_direction, write)
+    process (state, data_ready, data_out, ask_next_direction)
     begin
-        if (rising_edge(clk)) then
-            if (write = '1') then
-                write   <= '0';
-                written <= '1';
-            elsif (ask_next_direction = '1' and written = '0') then
-                write <= '1';
-            elsif (ask_next_direction = '0') then
-                written <= '0';
-            end if;
-        end if;
+        case state is
+            when asked =>
+                write <= '0';
+                if (data_ready = '1') then
+                    next_state <= recieved;
+                end if;
+            when recieved =>
+                if (data_out = STRAIGHT_DIRECTION) then
+                    next_direction <= "00";
+                elsif (data_out = LEFT_DIRECTION) then
+                    next_direction <= "01";
+                elsif (data_out = RIGHT_DIRECTION) then
+                    next_direction <= "10";
+                elsif (data_out = STOP) then
+                    stop_station <= '1';
+                else
+                    next_direction <= "00";
+                end if;
+                next_state <= executed;
+            when executed =>
+                if (ask_next_direction = '1') then
+                    write      <= '1';
+                    next_state <= asked;
+                end if;
+        end case;
     end process;
 
     process (clk, reset)
     begin
         if (rising_edge(clk)) then
             if (reset = '1') then
-                data_in <= (others => '0');
-            elsif (ask_next_direction = '1') then
-                data_in <= "00100000";
-                if (data_out = STRAIGHT_DIRECTION) then
-                    next_direction <= "00";
-                    led0           <= '0';
-                elsif (data_out = LEFT_DIRECTION) then
-                    next_direction <= "01";
-                    led0           <= '0';
-                elsif (data_out = RIGHT_DIRECTION) then
-                    next_direction <= "10";
-                    led0           <= '0';
-                elsif (data_out = STOP) then
-                    next_direction <= "11";
-                    led0           <= '1';
-                else
-                    next_direction <= "00";
-                    led0           <= '0';
-                end if;
+                state        <= recieved;
+                stop_station <= '0';
+            else
+                state <= next_state;
             end if;
         end if;
     end process;
 
-    process (clk, data_ready, write)
-    begin
-        if (data_ready = '1') then
-            new_direction_s <= '1';
-        elsif (write = '1') then
-            new_direction_s <= '0';
-        end if;
-    end process;
-
-    new_direction <= new_direction_s;
-    stop_station  <= '0';
+    new_direction <= '1' when (state = recieved) else '0';
+    data_in       <= "00100000";
 end architecture;

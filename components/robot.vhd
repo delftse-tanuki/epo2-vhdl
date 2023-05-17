@@ -81,8 +81,7 @@ architecture structural of robot is
             new_direction  : out std_logic;
             stop_station   : out std_logic;
             tx             : out std_logic;
-            rx             : in std_logic;
-            led0           : out std_logic
+            rx             : in std_logic
         );
     end component uart_control;
 
@@ -141,9 +140,8 @@ begin
         new_direction  => new_direction,
         stop_station   => stop_station,
 
-        tx   => tx,
-        rx   => rx,
-        led0 => led0
+        tx => tx,
+        rx => rx
     );
 
     motorcontrol_l : motorcontrol
