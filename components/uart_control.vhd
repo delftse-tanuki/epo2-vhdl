@@ -77,9 +77,9 @@ begin
         case state is
             when asked =>
                 write <= '0';
-                -- if (data_ready = '1') then
-                --     next_state <= recieved;
-                -- end if;
+                if (data_ready = '1') then
+                    next_state <= recieved;
+                end if;
                 led1 <= '0';
             when recieved =>
                 if (data_out = STRAIGHT_DIRECTION) then
@@ -98,12 +98,12 @@ begin
                     next_direction <= "00";
                 end if;
                 next_state <= executed;
-                led1       <= '1';
+                led1       <= '0';
             when executed =>
-                if (ask_next_direction = '1') then
-                    write      <= '1';
-                    next_state <= asked;
-                end if;
+                -- if (ask_next_direction = '1') then
+                --     write      <= '1';
+                --     next_state <= asked;
+                -- end if;
                 led1 <= '1';
         end case;
     end process;
