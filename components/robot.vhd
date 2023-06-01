@@ -163,4 +163,5 @@ begin
     );
 
     led1 <= ask_next_direction;
+    led0 <= stop_station;
 end architecture structural;
