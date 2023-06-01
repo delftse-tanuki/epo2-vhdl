@@ -85,7 +85,11 @@ begin
                 elsif (data_out = RIGHT_DIRECTION) then
                     next_direction <= "10";
                 elsif (data_out = STOP) then
-                    stop_station <= '1';
+                    if (reset = '1') then
+                        stop_station <= '0';
+                    else
+                        stop_station <= '1';
+                    end if;
                 else
                     next_direction <= "00";
                 end if;
