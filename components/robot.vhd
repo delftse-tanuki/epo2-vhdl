@@ -16,7 +16,8 @@ entity robot is
         rx   : in std_logic;
         tx   : out std_logic;
         led0 : out std_logic;
-        led1 : out std_logic
+        led1 : out std_logic;
+        led2 : out std_logic
     );
 end entity robot;
 
@@ -168,4 +169,6 @@ begin
         count_in  => count_out,
         pwm       => motor_r_pwm
     );
+
+    led2 <= ask_next_direction;
 end architecture structural;
