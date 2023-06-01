@@ -106,8 +106,8 @@ begin
                     write      <= '1';
                     next_state <= asked;
                 end if;
-                led0 <= '0';
-                led1 <= '0';
+                led0 <= '1';
+                led1 <= '1';
         end case;
     end process;
 
