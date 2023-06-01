@@ -112,7 +112,6 @@ begin
                 led1 <= '0';
                 led2 <= '1';
         else -- how is't mogelijk?
-                next_state <= recieved;
                 led0       <= '0';
                 led1       <= '1';
                 led2       <= '0';
