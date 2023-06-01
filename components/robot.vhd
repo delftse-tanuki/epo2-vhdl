@@ -42,7 +42,6 @@ architecture structural of robot is
             sensor_data    : in std_logic_vector(2 downto 0);
             next_direction : in std_logic_vector(1 downto 0);
             stop_station   : in std_logic;
-            new_direction  : in std_logic;
 
             motor_l_reset     : out std_logic;
             motor_l_direction : out std_logic;
@@ -79,12 +78,7 @@ architecture structural of robot is
             ask_next_direction : in std_logic;
 
             next_direction : out std_logic_vector(1 downto 0);
-            new_direction  : out std_logic;
             stop_station   : out std_logic;
-
-            led0 : out std_logic;
-            led1 : out std_logic;
-            led2 : out std_logic;
 
             tx : out std_logic;
             rx : in std_logic
@@ -96,7 +90,7 @@ architecture structural of robot is
     signal motor_l_reset, motor_l_direction                : std_logic;
     signal motor_r_reset, motor_r_direction                : std_logic;
     signal next_direction                                  : std_logic_vector(1 downto 0);
-    signal new_direction, ask_next_direction, stop_station : std_logic;
+    signal ask_next_direction, stop_station : std_logic;
 begin
 
     comp1 : inputbuffer
@@ -118,7 +112,6 @@ begin
         sensor_data    => sensor_data,
         next_direction => next_direction,
         stop_station   => stop_station,
-        new_direction  => new_direction,
 
         motor_l_reset     => motor_l_reset,
         motor_l_direction => motor_l_direction,
@@ -143,12 +136,7 @@ begin
         ask_next_direction => ask_next_direction,
 
         next_direction => next_direction,
-        new_direction  => new_direction,
         stop_station   => stop_station,
-
-        led0 => led0,
-        led1 => led1,
-        led2 => led2,
 
         tx => tx,
         rx => rx
@@ -171,4 +159,9 @@ begin
         count_in  => count_out,
         pwm       => motor_r_pwm
     );
+	 
+	 led0 <= ask_next_direction;
+	 led1 <= '0';
+	 led2 <= '0';
+
 end architecture structural;
