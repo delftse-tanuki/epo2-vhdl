@@ -14,6 +14,7 @@ entity uart_control is
 
         led0 : out std_logic;
         led1 : out std_logic;
+        led2 : out std_logic;
 
         tx : out std_logic;
         rx : in std_logic
@@ -80,7 +81,9 @@ begin
                 if (data_ready = '1') then
                     next_state <= recieved;
                 end if;
+                led0 <= '0';
                 led1 <= '0';
+                led2 <= '0';
             when recieved =>
                 if (data_out = STRAIGHT_DIRECTION) then
                     next_direction <= "00";
@@ -98,13 +101,17 @@ begin
                     next_direction <= "00";
                 end if;
                 next_state <= executed;
-                led1       <= '0';
+                led0       <= '1';
+                led1       <= '1';
+                led2       <= '0';
             when executed =>
                 -- if (ask_next_direction = '1') then
                 --     write      <= '1';
                 --     next_state <= asked;
                 -- end if;
-                led1 <= '1';
+                led0 <= '1';
+                led1 <= '0';
+                led2 <= '1';
         end case;
     end process;
 
@@ -121,5 +128,4 @@ begin
 
     new_direction <= '1' when (state = recieved) else '0';
     data_in       <= "00100000";
-    led0          <= data_ready;
 end architecture;

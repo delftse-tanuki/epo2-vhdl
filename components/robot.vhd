@@ -84,6 +84,7 @@ architecture structural of robot is
 
             led0 : out std_logic;
             led1 : out std_logic;
+            led2 : out std_logic;
 
             tx : out std_logic;
             rx : in std_logic
@@ -147,6 +148,7 @@ begin
 
         led0 => led0,
         led1 => led1,
+        led2 => led2,
 
         tx => tx,
         rx => rx
@@ -169,6 +171,4 @@ begin
         count_in  => count_out,
         pwm       => motor_r_pwm
     );
-
-    led2 <= ask_next_direction;
 end architecture structural;
