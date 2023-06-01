@@ -75,16 +75,15 @@ begin
 
     process (state, data_ready, data_out, ask_next_direction, reset)
     begin
-        case state is
-            when asked =>
+        if (state = asked)  then
                 write <= '0';
                 if (data_ready = '1') then
                     next_state <= recieved;
                 end if;
                 led0 <= '0';
                 led1 <= '0';
-                led2 <= '0';
-            when recieved =>
+                led2 <= '1';
+        elsif (state = recieved) then
                 if (data_out = STRAIGHT_DIRECTION) then
                     next_direction <= "00";
                 elsif (data_out = LEFT_DIRECTION) then
@@ -104,7 +103,7 @@ begin
                 led0       <= '1';
                 led1       <= '1';
                 led2       <= '0';
-            when executed =>
+        elsif (state = executed) then
                 -- if (ask_next_direction = '1') then
                 --     write      <= '1';
                 --     next_state <= asked;
@@ -112,7 +111,12 @@ begin
                 led0 <= '1';
                 led1 <= '0';
                 led2 <= '1';
-        end case;
+        else -- how is't mogelijk?
+                next_state <= recieved;
+                led0       <= '0';
+                led1       <= '1';
+                led2       <= '0';
+        end if;
     end process;
 
     process (clk, reset)
