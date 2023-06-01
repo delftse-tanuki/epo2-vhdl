@@ -107,7 +107,6 @@ begin
         if (rising_edge(clk)) then
             if (reset = '1') then
                 state        <= recieved;
-                stop_station <= '0';
             else
                 state <= next_state;
             end if;
