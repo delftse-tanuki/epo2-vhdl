@@ -14,6 +14,7 @@ entity uart_control is
 
         led0 : out std_logic;
         led1 : out std_logic;
+        led2 : out std_logic;
 
         tx : out std_logic;
         rx : in std_logic
@@ -80,7 +81,8 @@ begin
                     next_state <= recieved;
                 end if;
                 led0 <= '0';
-                led1 <= '1';
+                led1 <= '0';
+                led2 <= '1';
         elsif (state = recieved) then
                 if (data_out = STRAIGHT_DIRECTION) then
                     next_direction <= "00";
@@ -100,6 +102,7 @@ begin
                 next_state <= executed;
                 led0       <= '1';
                 led1       <= '1';
+                led2       <= '0';
         elsif (state = executed) then
                 if (ask_next_direction = '1') then
                     write      <= '1';
@@ -107,6 +110,11 @@ begin
                 end if;
                 led0 <= '1';
                 led1 <= '0';
+                led2 <= '1';
+        else -- how is't mogelijk?
+                led0       <= '0';
+                led1       <= '1';
+                led2       <= '0';
         end if;
     end process;
 
