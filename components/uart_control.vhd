@@ -72,7 +72,7 @@ begin
         rx => rx
     );
 
-    process (state, data_ready, data_out, ask_next_direction)
+    process (state, data_ready, data_out, ask_next_direction, reset)
     begin
         case state is
             when asked =>
