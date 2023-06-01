@@ -12,6 +12,9 @@ entity uart_control is
         new_direction  : out std_logic;
         stop_station   : out std_logic;
 
+        led0 : out std_logic;
+        led1 : out std_logic;
+
         tx : out std_logic;
         rx : in std_logic
     );
@@ -77,6 +80,8 @@ begin
                 if (data_ready = '1') then
                     next_state <= recieved;
                 end if;
+                led0 <= '1';
+                led1 <= '0';
             when recieved =>
                 if (data_out = STRAIGHT_DIRECTION) then
                     next_direction <= "00";
@@ -94,11 +99,15 @@ begin
                     next_direction <= "00";
                 end if;
                 next_state <= executed;
+                led0       <= '0';
+                led1       <= '1';
             when executed =>
                 if (ask_next_direction = '1') then
                     write      <= '1';
                     next_state <= asked;
                 end if;
+                led0 <= '0';
+                led1 <= '0';
         end case;
     end process;
 
