@@ -41,7 +41,6 @@ architecture structural of robot is
 
             sensor_data    : in std_logic_vector(2 downto 0);
             next_direction : in std_logic_vector(1 downto 0);
-            stop_station   : in std_logic;
 
             motor_l_reset     : out std_logic;
             motor_l_direction : out std_logic;
@@ -78,7 +77,6 @@ architecture structural of robot is
             ask_next_direction : in std_logic;
 
             next_direction : out std_logic_vector(1 downto 0);
-            stop_station   : out std_logic;
 
             tx : out std_logic;
             rx : in std_logic
@@ -90,7 +88,7 @@ architecture structural of robot is
     signal motor_l_reset, motor_l_direction                : std_logic;
     signal motor_r_reset, motor_r_direction                : std_logic;
     signal next_direction                                  : std_logic_vector(1 downto 0);
-    signal ask_next_direction, stop_station : std_logic;
+    signal ask_next_direction : std_logic;
 begin
 
     comp1 : inputbuffer
@@ -111,7 +109,6 @@ begin
 
         sensor_data    => sensor_data,
         next_direction => next_direction,
-        stop_station   => stop_station,
 
         motor_l_reset     => motor_l_reset,
         motor_l_direction => motor_l_direction,
@@ -136,7 +133,6 @@ begin
         ask_next_direction => ask_next_direction,
 
         next_direction => next_direction,
-        stop_station   => stop_station,
 
         tx => tx,
         rx => rx

@@ -9,7 +9,6 @@ entity uart_control is
         ask_next_direction : in std_logic;
 
         next_direction : out std_logic_vector(1 downto 0);
-        stop_station   : out std_logic;
 
         tx : out std_logic;
         rx : in std_logic
@@ -102,6 +101,4 @@ begin
             end if;
         end if;
     end process;
-
-    stop_station <= '0';
 end architecture;
