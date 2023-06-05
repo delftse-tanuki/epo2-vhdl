@@ -40,6 +40,8 @@ begin
                 skip_turn         <= '0';
                 drive             <= '0';
             elsif (drive = '0') then
+                motor_left_reset  <= '1';
+                motor_right_reset <= '1';
                 if (next_direction = "11") then
                     drive <= '1';
                 end if;
