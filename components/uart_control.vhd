@@ -11,8 +11,8 @@ entity uart_control is
         next_direction : out std_logic_vector(1 downto 0);
         stop_station   : out std_logic;
 
-        tx   : out std_logic;
-        rx   : in std_logic
+        tx : out std_logic;
+        rx : in std_logic
     );
 end entity uart_control;
 
@@ -44,9 +44,9 @@ architecture behavioural of uart_control is
         );
     end component uart;
 
-    signal data_in, data_out        : std_logic_vector(7 downto 0);
-    signal data_ready, write        : std_logic;
-    signal  written : std_logic;
+    signal data_in, data_out : std_logic_vector(7 downto 0);
+    signal data_ready, write : std_logic;
+    signal written           : std_logic;
 begin
     uart_inst : uart
     port map(
@@ -102,5 +102,5 @@ begin
         end if;
     end process;
 
-    stop_station  <= '0';
+    stop_station <= '0';
 end architecture;

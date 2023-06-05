@@ -7,7 +7,7 @@ entity controller is
         reset : in std_logic;
 
         sensor_data    : in std_logic_vector (2 downto 0);
-        next_direction : in std_logic_vector (1 downto 0); -- 00 = straight, 01 = left, 10 = right, 11 = backwards
+        next_direction : in std_logic_vector (1 downto 0); -- 00 = straight, 01 = left, 10 = right, 11 = start/stop
         stop_station   : in std_logic;
 
         motor_l_reset     : out std_logic;
@@ -22,7 +22,7 @@ end entity controller;
 
 architecture behavioural of controller is
 
-    signal motor_left_reset, motor_right_reset             : std_logic := '0';
+    signal motor_left_reset, motor_right_reset, drive      : std_logic := '0';
     signal motor_left_direction, motor_right_direction     : std_logic := '0';
     signal turning, skip_checkpoint, checkpoint, skip_turn : std_logic := '0';
 
@@ -38,6 +38,11 @@ begin
                 skip_checkpoint   <= '0';
                 checkpoint        <= '0';
                 skip_turn         <= '0';
+                drive             <= '0';
+            elsif (drive = '0') then
+                if (next_direction = "11") then
+                    drive <= '1';
+                end if;
             elsif (turning = '1') then
                 if (skip_turn = '1') then
                     if (sensor_data = "111") then
@@ -55,7 +60,7 @@ begin
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '1';
                     motor_right_direction <= '0';
-						  ask_next_direction 	<= '0';
+                    ask_next_direction    <= '0';
                 elsif (next_direction = "00") then
                     -- Straight
                     motor_left_reset      <= '0';
@@ -75,14 +80,6 @@ begin
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '1';
                     motor_right_direction <= '1';
-                    skip_turn             <= '1';
-                elsif (next_direction = "11") then
-                    -- Backwards
-                    motor_left_reset      <= '0';
-                    motor_right_reset     <= '0';
-                    motor_left_direction  <= '0';
-                    motor_right_direction <= '0';
-                    turning               <= '1';
                     skip_turn             <= '1';
                 end if;
             elsif (sensor_data = "001") then
