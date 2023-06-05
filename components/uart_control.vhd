@@ -84,7 +84,8 @@ begin
     begin
         if (rising_edge(clk)) then
             if (reset = '1') then
-                data_in <= (others => '0');
+                data_in        <= (others => '0');
+                next_direction <= "00";
             else
                 data_in <= "00100000";
                 if (data_out = STRAIGHT_DIRECTION) then
