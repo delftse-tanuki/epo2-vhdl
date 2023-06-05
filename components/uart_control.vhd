@@ -19,7 +19,7 @@ architecture behavioural of uart_control is
     constant STRAIGHT_DIRECTION : std_logic_vector(7 downto 0) := "00000000";
     constant LEFT_DIRECTION     : std_logic_vector(7 downto 0) := "00000001";
     constant RIGHT_DIRECTION    : std_logic_vector(7 downto 0) := "00000010";
-    constant STOP               : std_logic_vector(7 downto 0) := "00000011";
+    constant START_STOP         : std_logic_vector(7 downto 0) := "00000011";
 
     component uart is
         generic (
@@ -93,7 +93,7 @@ begin
                     next_direction <= "01";
                 elsif (data_out = RIGHT_DIRECTION) then
                     next_direction <= "10";
-                elsif (data_out = STOP) then
+                elsif (data_out = START_STOP) then
                     next_direction <= "11";
                 else
                     next_direction <= "00";
