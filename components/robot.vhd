@@ -134,7 +134,7 @@ begin
         ask_next_direction => ask_next_direction,
 
         next_direction => next_direction,
-        led1           => led1
+        led1           => led1,
 
         tx => tx,
         rx => rx
