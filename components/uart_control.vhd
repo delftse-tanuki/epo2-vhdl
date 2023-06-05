@@ -75,7 +75,7 @@ begin
             elsif (ask_next_direction = '1' and written_count = 3) then
                 write <= '1';
             elsif (ask_next_direction = '0') then
-                written_count <= 0;
+                written_count <= (others => '0');
             end if;
         end if;
     end process;
