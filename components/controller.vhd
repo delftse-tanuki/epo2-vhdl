@@ -64,7 +64,6 @@ begin
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '1';
                     motor_right_direction <= '0';
-                    ask_next_direction    <= '0';
                 elsif (next_direction = "00") then
                     -- Straight
                     motor_left_reset      <= '0';
@@ -118,13 +117,13 @@ begin
                     motor_left_reset  <= '1';
                     motor_right_reset <= '1';
                 else
-                    -- Turn 180° and reset skip_checkpoint
+                    -- Drive backwards and reset skip_checkpoint
                     motor_left_reset      <= '0';
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '0';
                     motor_right_direction <= '1';
                     backwards             <= '1';
-                    ask_next_direction    <= '1';
+                    ask_next_direction    <= '0';
                     skip_checkpoint       <= '0';
                 end if;
             end if;
@@ -132,9 +131,9 @@ begin
                 checkpoint <= '0';
                 if (skip_checkpoint = '1') then
                     skip_checkpoint <= '0';
+                    ask_next_direction <= '1';
                 else
                     skip_checkpoint    <= '1';
-                    ask_next_direction <= '1';
                 end if;
             end if;
         end if;
