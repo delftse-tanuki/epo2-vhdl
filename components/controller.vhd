@@ -22,9 +22,9 @@ end entity controller;
 
 architecture behavioural of controller is
 
-    signal motor_left_reset, motor_right_reset, drive      : std_logic := '0';
-    signal motor_left_direction, motor_right_direction     : std_logic := '0';
-    signal turning, skip_checkpoint, checkpoint, skip_turn : std_logic := '0';
+    signal motor_left_reset, motor_right_reset, drive, backwards : std_logic := '0';
+    signal motor_left_direction, motor_right_direction           : std_logic := '0';
+    signal turning, skip_checkpoint, checkpoint, skip_turn       : std_logic := '0';
 
 begin
 
@@ -52,6 +52,14 @@ begin
                     end if;
                 elsif (sensor_data = "011" or sensor_data = "110") then
                     turning <= '0';
+                end if;
+            elsif (backwards = '1') then
+                motor_left_reset      <= '0';
+                motor_right_reset     <= '0';
+                motor_left_direction  <= '0';
+                motor_right_direction <= '1';
+                if (sensor_data = "000") then
+                    backwards <= '0';
                 end if;
             elsif (sensor_data = "000") then
                 -- Checkpoint
@@ -122,9 +130,9 @@ begin
                     motor_left_reset      <= '0';
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '0';
-                    motor_right_direction <= '0';
-                    turning               <= '1';
-                    skip_turn             <= '1';
+                    motor_right_direction <= '1';
+                    backwards             <= '1';
+                    ask_next_direction    <= '1';
                     skip_checkpoint       <= '0';
                 end if;
             end if;
