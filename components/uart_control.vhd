@@ -70,8 +70,11 @@ begin
     begin
         if (rising_edge(clk)) then
             if (write = '1') then
-                write         <= '0';
-                written_count <= written_count + 1;
+                if (written_count = 3) then
+                    write <= '0';
+                else
+                    written_count <= written_count + 1;
+                end if;
             elsif (ask_next_direction = '1' and not written_count = 3) then
                 write <= '1';
             elsif (ask_next_direction = '0') then
@@ -103,5 +106,5 @@ begin
         end if;
     end process;
 
-    led1 <= '0' when written_count = 0 else '1';
+    led1 <= '1' when written_count = 3 else '0';
 end architecture;
