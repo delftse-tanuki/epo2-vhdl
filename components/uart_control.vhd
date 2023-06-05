@@ -66,12 +66,10 @@ begin
         rx => rx
     );
 
-    process (clk, ask_next_direction, write, reset)
+    process (clk, ask_next_direction, write)
     begin
         if (rising_edge(clk)) then
-            if (reset = '1') then
-                write <= '1';
-            elsif (write = '1') then
+            if (write = '1') then
                 write   <= '0';
                 written <= '1';
             elsif (ask_next_direction = '1' and written = '0') then
