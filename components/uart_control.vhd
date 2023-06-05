@@ -9,6 +9,7 @@ entity uart_control is
         ask_next_direction : in std_logic;
 
         next_direction : out std_logic_vector(1 downto 0);
+        led1           : out std_logic;
 
         tx : out std_logic;
         rx : in std_logic
@@ -101,4 +102,6 @@ begin
             end if;
         end if;
     end process;
+
+    led1 <= written;
 end architecture;

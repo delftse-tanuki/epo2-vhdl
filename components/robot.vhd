@@ -77,18 +77,19 @@ architecture structural of robot is
             ask_next_direction : in std_logic;
 
             next_direction : out std_logic_vector(1 downto 0);
+            led1           : out std_logic;
 
             tx : out std_logic;
             rx : in std_logic
         );
     end component uart_control;
 
-    signal sensor_data                                     : std_logic_vector(2 downto 0);
-    signal count_out                                       : std_logic_vector(19 downto 0);
-    signal motor_l_reset, motor_l_direction                : std_logic;
-    signal motor_r_reset, motor_r_direction                : std_logic;
-    signal next_direction                                  : std_logic_vector(1 downto 0);
-    signal ask_next_direction : std_logic;
+    signal sensor_data                      : std_logic_vector(2 downto 0);
+    signal count_out                        : std_logic_vector(19 downto 0);
+    signal motor_l_reset, motor_l_direction : std_logic;
+    signal motor_r_reset, motor_r_direction : std_logic;
+    signal next_direction                   : std_logic_vector(1 downto 0);
+    signal ask_next_direction               : std_logic;
 begin
 
     comp1 : inputbuffer
@@ -133,6 +134,7 @@ begin
         ask_next_direction => ask_next_direction,
 
         next_direction => next_direction,
+        led1           => led1
 
         tx => tx,
         rx => rx
@@ -155,9 +157,8 @@ begin
         count_in  => count_out,
         pwm       => motor_r_pwm
     );
-	 
-	 led0 <= ask_next_direction;
-	 led1 <= '0';
-	 led2 <= '0';
+
+    led0 <= ask_next_direction;
+    led2 <= '0';
 
 end architecture structural;
