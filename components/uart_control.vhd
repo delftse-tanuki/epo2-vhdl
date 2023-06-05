@@ -66,7 +66,7 @@ begin
         rx => rx
     );
 
-    process (clk, ask_next_direction, write)
+    process (clk, ask_next_direction, write, written)
     begin
         if (rising_edge(clk)) then
             if (write = '1') then
