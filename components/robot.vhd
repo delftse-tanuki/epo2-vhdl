@@ -77,7 +77,6 @@ architecture structural of robot is
             ask_next_direction : in std_logic;
 
             next_direction : out std_logic_vector(1 downto 0);
-            led1           : out std_logic;
 
             tx : out std_logic;
             rx : in std_logic
@@ -134,7 +133,6 @@ begin
         ask_next_direction => ask_next_direction,
 
         next_direction => next_direction,
-        led1           => led1,
 
         tx => tx,
         rx => rx
@@ -159,6 +157,7 @@ begin
     );
 
     led0 <= ask_next_direction;
+    led1 <= '0';
     led2 <= '0';
 
 end architecture structural;

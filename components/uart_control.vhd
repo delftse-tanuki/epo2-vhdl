@@ -9,7 +9,6 @@ entity uart_control is
         ask_next_direction : in std_logic;
 
         next_direction : out std_logic_vector(1 downto 0);
-        led1           : out std_logic;
 
         tx : out std_logic;
         rx : in std_logic
@@ -46,7 +45,7 @@ architecture behavioural of uart_control is
 
     signal data_in, data_out : std_logic_vector(7 downto 0);
     signal data_ready, write : std_logic;
-    signal written_count     : unsigned(4 downto 0) := (others => '0');
+    signal written_count     : unsigned(15 downto 0) := (others => '0');
 begin
     uart_inst : uart
     port map(
@@ -66,16 +65,19 @@ begin
         rx => rx
     );
 
-    process (clk, ask_next_direction, write, written_count)
+    process (clk, reset, ask_next_direction, write, written_count)
     begin
         if (rising_edge(clk)) then
-            if (write = '1') then
-                if (written_count = 30) then
+            if (reset = '1') then
+                write         <= '0';
+                written_count <= (others => '0');
+            elsif (write = '1') then
+                if (written_count = 50000) then
                     write <= '0';
                 else
                     written_count <= written_count + 1;
                 end if;
-            elsif (ask_next_direction = '1' and not written_count = 30) then
+            elsif (ask_next_direction = '1' and not written_count = 50000) then
                 write <= '1';
             elsif (ask_next_direction = '0') then
                 written_count <= (others => '0');
@@ -105,6 +107,4 @@ begin
             end if;
         end if;
     end process;
-
-    led1 <= '1' when written_count = 30 else '0';
 end architecture;
