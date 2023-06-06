@@ -60,7 +60,7 @@ begin
         buffer_empty => open,
 
         read  => data_ready,
-        write => write,
+        write => written_count(0),
 
         tx => tx,
         rx => rx
