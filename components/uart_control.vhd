@@ -45,7 +45,7 @@ architecture behavioural of uart_control is
     end component uart;
 
     signal data_in, data_out                        : std_logic_vector(7 downto 0);
-    signal data_ready, write, written, buffer_empty : std_logic;
+    signal data_ready, write, written : std_logic;
 begin
     uart_inst : uart
     port map(
@@ -56,7 +56,7 @@ begin
         data_out => data_out,
 
         data_ready   => data_ready,
-        buffer_empty => buffer_empty,
+        buffer_empty => open,
 
         read  => data_ready,
         write => write,
@@ -65,7 +65,7 @@ begin
         rx => rx
     );
 
-    process (clk, reset, ask_next_direction, write, written, buffer_empty)
+    process (clk, reset, ask_next_direction, write, written)
     begin
         if (rising_edge(clk)) then
             if (reset = '1') then
@@ -74,7 +74,7 @@ begin
             elsif (write = '1') then
                 write   <= '0';
                 written <= '1';
-            elsif (ask_next_direction = '1' and written = '0' and buffer_empty = '0') then
+            elsif (ask_next_direction = '1' and written = '0') then
                 write <= '1';
             elsif (ask_next_direction = '0') then
                 written <= '0';
@@ -105,5 +105,5 @@ begin
         end if;
     end process;
 
-    led1 <= buffer_empty;
+    led1 <= '0';
 end architecture;
