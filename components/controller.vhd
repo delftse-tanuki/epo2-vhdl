@@ -130,7 +130,7 @@ begin
             if (checkpoint = '1' and sensor_data = "101") then
                 checkpoint <= '0';
                 if (skip_checkpoint = '1') then
-                    skip_checkpoint <= '0';
+                    skip_checkpoint    <= '0';
                     ask_next_direction <= '1';
                 else
                     skip_checkpoint    <= '1';
