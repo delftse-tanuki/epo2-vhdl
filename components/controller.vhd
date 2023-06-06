@@ -134,6 +134,7 @@ begin
                     ask_next_direction <= '1';
                 else
                     skip_checkpoint    <= '1';
+                    ask_next_direction <= '0';
                 end if;
             end if;
         end if;
