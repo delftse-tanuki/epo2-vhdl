@@ -44,8 +44,12 @@ architecture behavioural of uart_control is
         );
     end component uart;
 
-    signal data_in, data_out                     : std_logic_vector(7 downto 0);
-    signal data_ready, write, written, read_data : std_logic := '0';
+    signal data_in, data_out     : std_logic_vector(7 downto 0);
+    signal data_ready, read_data : std_logic             := '0';
+    signal write, start_write    : std_logic             := '0';
+    signal timer                 : unsigned(15 downto 0) := (others => '0');
+    signal written_counter       : unsigned(2 downto 0)  := (others => '0');
+
 begin
     uart_inst : uart
     port map(
@@ -65,19 +69,26 @@ begin
         rx => rx
     );
 
-    process (clk, reset, ask_next_direction, write, written)
+    process (clk, reset, ask_next_direction, write)
     begin
         if (rising_edge(clk)) then
             if (reset = '1') then
-                write   <= '0';
-                written <= '0';
-            elsif (write = '1') then
-                write   <= '0';
-                written <= '1';
-            elsif (ask_next_direction = '1' and written = '0') then
-                write <= '1';
+                write           <= '0';
+                written_counter <= (others => '0');
+                timer           <= (others => '0');
+            elsif (start_write = '1') then
+                if (to_integer(unsigned(timer)) < 50000) then
+                    timer <= timer + 1;
+                    write <= '0';
+                else
+                    timer <= (others => '0');
+                    write <= '1';
+                end if;
+            elsif (ask_next_direction = '1' and to_integer(unsigned(written_counter) < 6)) then
+                start_write <= '1';
             elsif (ask_next_direction = '0') then
-                written <= '0';
+                written_counter <= (others => '0');
+                start_write     <= '0';
             end if;
         end if;
     end process;
