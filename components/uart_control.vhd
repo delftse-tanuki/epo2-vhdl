@@ -82,11 +82,12 @@ begin
         end if;
     end process;
 
-    process (clk, reset)
+    process (clk, reset, data_ready, read_data, data_out)
     begin
         if (rising_edge(clk)) then
             if (reset = '1') then
                 next_direction <= "00";
+                read_data      <= '0';
             elsif (data_ready = '1') then
                 if (data_out = STRAIGHT_DIRECTION) then
                     next_direction <= "00";
@@ -99,16 +100,6 @@ begin
                 else
                     next_direction <= "00";
                 end if;
-            end if;
-        end if;
-    end process;
-
-    process (clk)
-    begin
-        if (rising_edge(clk)) then
-            if (reset = '1') then
-                read_data <= '0';
-            elsif (data_ready = '1') then
                 read_data <= '1';
             elsif (read_data = '1') then
                 read_data <= '0';
@@ -116,6 +107,6 @@ begin
         end if;
     end process;
 
-    led1 <= '0';
+    led1    <= '0';
     data_in <= "00100000";
 end architecture;
