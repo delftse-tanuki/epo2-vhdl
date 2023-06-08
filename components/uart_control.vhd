@@ -80,6 +80,7 @@ begin
                 written <= '0';
             else null;
             end if;
+        else null;
         end if;
     end process;
 
@@ -106,6 +107,7 @@ begin
                 read_data <= '0';
             else null;
             end if;
+        else null;
         end if;
     end process;
 

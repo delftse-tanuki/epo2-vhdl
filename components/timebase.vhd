@@ -26,6 +26,7 @@ begin
             else
                 count <= new_count;
             end if;
+        else null;
         end if;
     end process;
 

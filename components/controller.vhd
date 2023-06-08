@@ -45,6 +45,7 @@ begin
                 motor_right_reset <= '1';
                 if (next_direction = "11") then
                     drive <= '1';
+                else null;
                 end if;
             elsif (backwards = '1') then
                 motor_left_reset      <= '0';
@@ -53,14 +54,17 @@ begin
                 motor_right_direction <= '1';
                 if (sensor_data = "000") then
                     backwards <= '0';
+                else null;
                 end if;
             elsif (turning = '1') then
                 if (skip_turn = '1') then
                     if (sensor_data = "111") then
                         skip_turn <= '0';
+                    else null;
                     end if;
                 elsif (sensor_data = "011" or sensor_data = "110") then
                     turning <= '0';
+                else null;
                 end if;
             elsif (sensor_data = "000") then
                 -- Checkpoint
@@ -89,6 +93,7 @@ begin
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '1';
                     motor_right_direction <= '1';
+                else null;
                 end if;
             elsif (sensor_data = "001") then
                 motor_left_reset      <= '1';
@@ -133,6 +138,7 @@ begin
                     skip_turn             <= '1';
                     skip_checkpoint       <= '0';
                 end if;
+            else null;
             end if;
             if (checkpoint = '1' and sensor_data = "101") then
                 checkpoint <= '0';
@@ -143,7 +149,9 @@ begin
                     skip_checkpoint    <= '1';
                     ask_next_direction <= '0';
                 end if;
+            else null;
             end if;
+        else null;
         end if;
     end process;
 

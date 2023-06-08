@@ -37,6 +37,7 @@ begin
                     pwm_out <= '0';
                 end if;
             end if;
+        else null;
         end if;
     end process;
 
