@@ -86,10 +86,8 @@ begin
     begin
         if (rising_edge(clk)) then
             if (reset = '1') then
-                data_in        <= (others => '0');
                 next_direction <= "00";
-            else
-                data_in <= "00100000";
+            elsif (data_ready = '1') then
                 if (data_out = STRAIGHT_DIRECTION) then
                     next_direction <= "00";
                 elsif (data_out = LEFT_DIRECTION) then
@@ -119,4 +117,5 @@ begin
     end process;
 
     led1 <= '0';
+    data_in <= "00100000";
 end architecture;
