@@ -84,7 +84,7 @@ begin
                     timer <= (others => '0');
                     write <= '1';
                 end if;
-            elsif (ask_next_direction = '1' and to_integer(unsigned(written_counter) < 6)) then
+            elsif (ask_next_direction = '1' and to_integer(unsigned(written_counter)) < 6) then
                 start_write <= '1';
             elsif (ask_next_direction = '0') then
                 written_counter <= (others => '0');
