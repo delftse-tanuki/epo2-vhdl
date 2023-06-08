@@ -78,6 +78,7 @@ begin
                 write <= '1';
             elsif (ask_next_direction = '0') then
                 written <= '0';
+            else null;
             end if;
         end if;
     end process;
@@ -103,6 +104,7 @@ begin
                 read_data <= '1';
             elsif (read_data = '1') then
                 read_data <= '0';
+            else null;
             end if;
         end if;
     end process;

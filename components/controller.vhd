@@ -24,6 +24,7 @@ architecture behavioural of controller is
     signal motor_left_reset, motor_right_reset, drive  : std_logic;
     signal motor_left_direction, motor_right_direction : std_logic;
     signal skip_checkpoint, checkpoint, backwards      : std_logic;
+    signal turning, skip_turn                          : std_logic;
 
 begin
 
@@ -37,6 +38,8 @@ begin
                 checkpoint        <= '0';
                 drive             <= '0';
                 backwards         <= '0';
+                turning           <= '0';
+                skip_turn         <= '0';
             elsif (drive = '0') then
                 motor_left_reset  <= '1';
                 motor_right_reset <= '1';
@@ -50,6 +53,14 @@ begin
                 motor_right_direction <= '1';
                 if (sensor_data = "000") then
                     backwards <= '0';
+                end if;
+            elsif (turning = '1') then
+                if (skip_turn = '1') then
+                    if (sensor_data = "111") then
+                        skip_turn <= '0';
+                    end if;
+                elsif (sensor_data = "011" or sensor_data = "110") then
+                    turning <= '0';
                 end if;
             elsif (sensor_data = "000") then
                 -- Checkpoint
@@ -113,13 +124,13 @@ begin
                     motor_left_reset  <= '1';
                     motor_right_reset <= '1';
                 else
-                    -- Drive backwards and reset skip_checkpoint
+                    -- Turn 180° and reset skip_checkpoint
                     motor_left_reset      <= '0';
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '0';
-                    motor_right_direction <= '1';
-                    backwards             <= '1';
-                    ask_next_direction    <= '0';
+                    motor_right_direction <= '0';
+                    turning               <= '1';
+                    skip_turn             <= '1';
                     skip_checkpoint       <= '0';
                 end if;
             end if;
