@@ -40,12 +40,13 @@ begin
                 backwards          <= '0';
                 turning            <= '0';
                 skip_turn          <= '0';
-                ask_next_direction <= '1';
+                ask_next_direction <= '0';
             elsif (drive = '0') then
                 motor_left_reset  <= '1';
                 motor_right_reset <= '1';
                 if (next_direction = "11") then
-                    drive <= '1';
+                    drive              <= '1';
+                    ask_next_direction <= '1';
                 else null;
                 end if;
             elsif (backwards = '1') then
