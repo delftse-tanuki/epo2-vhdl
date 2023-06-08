@@ -386,7 +386,7 @@ architecture structural of uart_tx is
     signal buffer_data_read, buffer_data_ready : std_logic;
     signal buffer_data_empty                   : std_logic;
 
-    signal uart_clk_reset, baud_clk : std_logic;
+    signal uart_clk_reset, sample_clk, baud_clk : std_logic;
 
 begin
 
@@ -414,6 +414,10 @@ begin
     port map(
         clk   => clk,
         reset => uart_clk_reset,
+
+        sample_clk => sample_clk,
+        -- sample_count    =>
+
         baud_clk => baud_clk
     );
 
