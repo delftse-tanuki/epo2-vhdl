@@ -3,77 +3,87 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 entity mine_detector is
-  port (
-    clk : in std_logic;
-    reset : in std_logic;
-    sensor_in : in std_logic;
-    mine_detected : out std_logic;
-    ledm : out std_logic
-  );
+    port (
+        clk           : in std_logic;
+        reset         : in std_logic;
+        sensor_in     : in std_logic;
+        mine_detected : out std_logic;
+        ledm          : out std_logic
+    );
 end entity mine_detector;
 
 architecture behavioural of mine_detector is
 
-  signal count : unsigned (13 downto 0) := (others => '0');
-  signal new_count : unsigned (13 downto 0) := (others => '0');
-  signal mine_detected_temp : std_logic;
-  signal mine_detected_i : std_logic;
-  signal sensor_in_rise_event : std_logic;
-  type state_type is (sensor_in_high, sensor_in_low);
-  signal state_re, new_state_re: state_type;
+    signal count                : unsigned (13 downto 0) := (others => '0');
+    signal new_count            : unsigned (13 downto 0) := (others => '0');
+    signal mine_detected_temp   : std_logic;
+    signal mine_detected_i      : std_logic;
+    signal sensor_in_rise_event : std_logic;
+    type state_type is (sensor_in_high, sensor_in_low);
+    signal state_re, new_state_re : state_type;
 begin
 
-  process (state_re, sensor_in)
-  begin
-    sensor_in_rise_event <= '0';
-    case state_re is
-      when sensor_in_low =>
-        if (sensor_in = '1') then
-          sensor_in_rise_event <= '1';
-          new_state_re <= sensor_in_high;
-        else
-          new_state_re <= sensor_in_low;
-        end if;
-      when sensor_in_high =>
-        if (sensor_in = '1') then
-          new_state_re <= sensor_in_high;
-        else
-          new_state_re <= sensor_in_low;
-        end if;
-    end case;
-  end process;
-  process (clk)
-  begin
+    process (state_re, sensor_in)
+    begin
+        sensor_in_rise_event <= '0';
+        case state_re is
+            when sensor_in_low =>
+                if (sensor_in = '1') then
+                    sensor_in_rise_event <= '1';
+                    new_state_re         <= sensor_in_high;
+                else
+                    new_state_re <= sensor_in_low;
+                end if;
+            when sensor_in_high =>
+                if (sensor_in = '1') then
+                    new_state_re <= sensor_in_high;
+                else
+                    new_state_re <= sensor_in_low;
+                end if;
+        end case;
+    end process;
 
-    if (rising_edge(clk)) then
-      if (reset = '1') then
-        ledm <= '0';
-        count <= (others => '0');
-        mine_detected_i <= '0';
-      else
-        if (mine_detected_i = '1') then
-          ledm <= '1';
-        else
-          ledm <= '0';
+    process (clk)
+    begin
+
+        if (rising_edge(clk)) then
+            if (reset = '1') then
+                ledm            <= '0';
+                count           <= (others => '0');
+                mine_detected_i <= '0';
+            else
+                if (mine_detected_i = '1') then
+                    ledm <= '1';
+                else
+                    ledm <= '0';
+                end if;
+            end if;
+
+            if (sensor_in = '1') then
+                count <= new_count;
+            else
+                mine_detected_i <= mine_detected_temp;
+            end if;
         end if;
-      end if;
+    end process;
 
-      if (sensor_in = '1') then
-        count <= new_count;
-      else
-        mine_detected_i <= mine_detected_temp;
-      end if;
-    end if;
-  end process;
-  process (count)
-  begin
-    if (to_integer (count) < 2500) then
-      mine_detected_temp <= '1';
-    else
-      mine_detected_temp <= '0';
-    end if;
-    new_count <= count + 1;
-  end process;
+    process (count)
+    begin
+        if (to_integer (count) < 2500) then
+            mine_detected_temp <= '1';
+        else
+            mine_detected_temp <= '0';
+        end if;
+        new_count <= count + 1;
+    end process;
 
-  mine_detected <= mine_detected_i;
+    process (clk)
+    begin
+        if (rising_edge(clk)) then
+            state_re <= new_state_re;
+        else null;
+        end if;
+    end process;
+
+    mine_detected <= mine_detected_i;
 end architecture behavioural;
