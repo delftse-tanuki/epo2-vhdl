@@ -12,14 +12,16 @@ end entity timebase;
 
 architecture behavioural of timebase is
 
-    signal count     : unsigned (19 downto 0) := (others => '0');
-    signal new_count : unsigned (19 downto 0) := (others => '0');
+    signal count, new_count : unsigned (19 downto 0);
 
 begin
     process (clk)
     begin
         if (rising_edge(clk)) then
-            if (reset = '1' or count = 1000000) then
+            if (reset = '1') then
+                count     <= (others => '0');
+                new_count <= (others => '0');
+            elsif (count = 1000000) then
                 count <= (others => '0');
             else
                 count <= new_count;

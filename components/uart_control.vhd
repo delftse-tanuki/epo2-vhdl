@@ -45,7 +45,7 @@ architecture behavioural of uart_control is
     end component uart;
 
     signal data_in, data_out                     : std_logic_vector(7 downto 0);
-    signal data_ready, write, written, read_data : std_logic := '0';
+    signal data_ready, write, written, read_data : std_logic;
 begin
     uart_inst : uart
     port map(

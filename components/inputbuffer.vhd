@@ -46,7 +46,7 @@ architecture behavioural of inputbuffer is
         );
     end component three_bit_registry;
 
-    signal sensor_in, reg1_out, reg2_out : std_logic_vector(2 downto 0) := (others => '0');
+    signal sensor_in, reg1_out, reg2_out : std_logic_vector(2 downto 0);
 
 begin
 
