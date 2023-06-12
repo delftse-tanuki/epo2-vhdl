@@ -21,7 +21,7 @@ begin
                 pwm <= '0';
             elsif (direction = '0') then
                 -- 1 ms
-                if (to_integer(count_in)) < 50000) then
+                if (to_integer(count_in) < 50000) then
                     pwm <= '1';
                 else
                     pwm <= '0';
