@@ -43,7 +43,7 @@ begin
         end case;
     end process;
 
-    process (clk)
+    process (clk, sensor_in_rise_event)
     begin
 
         if (rising_edge(clk)) then
@@ -59,17 +59,19 @@ begin
                 end if;
             end if;
 
-            if (sensor_in = '1') then
-                count <= new_count;
-            else
-                mine_detected_i <= mine_detected_temp;
-            end if;
         end if;
+
+        if (sensor_in_rise_event = '1') then
+            count <= new_count;
+        else
+            mine_detected_i <= mine_detected_temp;
+        end if;
+
     end process;
 
     process (count)
     begin
-        if (to_integer (count) < 2500) then
+        if (to_integer (count) < 5000) then
             mine_detected_temp <= '1';
         else
             mine_detected_temp <= '0';
