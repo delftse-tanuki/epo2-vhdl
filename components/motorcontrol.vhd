@@ -21,14 +21,14 @@ begin
                 pwm <= '0';
             elsif (direction = '0') then
                 -- 1 ms
-                if (to_integer(unsigned(count_in)) < 50000) then
+                if (to_integer(count_in)) < 50000) then
                     pwm <= '1';
                 else
                     pwm <= '0';
                 end if;
             else
                 -- 2 ms
-                if (to_integer(unsigned(count_in)) < 100000) then
+                if (to_integer(count_in) < 100000) then
                     pwm <= '1';
                 else
                     pwm <= '0';

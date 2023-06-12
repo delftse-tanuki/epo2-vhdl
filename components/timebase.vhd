@@ -29,6 +29,6 @@ begin
         end if;
     end process;
 
-    count_out <= std_logic_vector(count);
+    count_out <= count;
 
 end architecture behavioural;
