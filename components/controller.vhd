@@ -7,11 +7,9 @@ entity controller is
         reset : in std_logic;
 
         sensor_data    : in std_logic_vector (2 downto 0);
-        next_direction : in std_logic_vector (1 downto 0); -- 00 = straight, 01 = left, 10 = right, 11 = backwards
-        stop_station   : in std_logic;
-        new_direction  : in std_logic;
+        next_direction : in std_logic_vector (1 downto 0); -- 00 = straight, 01 = left, 10 = right, 11 = start/stop
 
-        mine_detected  : in std_logic;
+        mine_detected     : in std_logic;
 
         motor_l_reset     : out std_logic;
         motor_l_direction : out std_logic; -- 1 = forward, 0 = backwards
@@ -25,9 +23,10 @@ end entity controller;
 
 architecture behavioural of controller is
 
-    signal motor_left_reset, motor_right_reset             : std_logic := '0';
-    signal motor_left_direction, motor_right_direction     : std_logic := '0';
-    signal turning, skip_checkpoint, checkpoint, skip_turn : std_logic := '0';
+    signal motor_left_reset, motor_right_reset, drive  : std_logic;
+    signal motor_left_direction, motor_right_direction : std_logic;
+    signal skip_checkpoint, checkpoint, backwards      : std_logic;
+    signal turning, skip_turn                          : std_logic;
 
 begin
 
@@ -35,19 +34,22 @@ begin
     begin
         if (rising_edge(clk)) then
             if (reset = '1') then
+                motor_left_reset   <= '1';
+                motor_right_reset  <= '1';
+                skip_checkpoint    <= '0';
+                checkpoint         <= '0';
+                drive              <= '0';
+                backwards          <= '0';
+                turning            <= '0';
+                skip_turn          <= '0';
+                ask_next_direction <= '0';
+            elsif (drive = '0') then
                 motor_left_reset  <= '1';
                 motor_right_reset <= '1';
-                turning           <= '0';
-                skip_checkpoint   <= '0';
-                checkpoint        <= '0';
-                skip_turn         <= '0';
-            elsif (turning = '1') then
-                if (skip_turn = '1') then
-                    if (sensor_data = "111") then
-                        skip_turn <= '0';
-                    end if;
-                elsif (sensor_data = "011" or sensor_data = "110") then
-                    turning <= '0';
+                if (next_direction = "11") then
+                    drive              <= '1';
+                    ask_next_direction <= '1';
+                else null;
                 end if;
             elsif (mine_detected = '1') then
                 motor_left_reset      <= '0';
@@ -56,6 +58,25 @@ begin
                 motor_right_direction <= '0';
                 turning               <= '1';
                 skip_turn             <= '1';
+            elsif (backwards = '1') then
+                motor_left_reset      <= '0';
+                motor_right_reset     <= '0';
+                motor_left_direction  <= '0';
+                motor_right_direction <= '1';
+                if (sensor_data = "000") then
+                    backwards <= '0';
+                else null;
+                end if;
+            elsif (turning = '1') then
+                if (skip_turn = '1') then
+                    if (sensor_data = "111") then
+                        skip_turn <= '0';
+                    else null;
+                    end if;
+                elsif (sensor_data = "011" or sensor_data = "110") then
+                    turning <= '0';
+                else null;
+                end if;
             elsif (sensor_data = "000") then
                 -- Checkpoint
                 checkpoint <= '1';
@@ -77,24 +98,14 @@ begin
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '0';
                     motor_right_direction <= '0';
-                    skip_turn             <= '1';
                 elsif (next_direction = "10") then
                     -- Right
                     motor_left_reset      <= '0';
                     motor_right_reset     <= '0';
                     motor_left_direction  <= '1';
                     motor_right_direction <= '1';
-                    skip_turn             <= '1';
-                elsif (next_direction = "11") then
-                    -- Backwards
-                    motor_left_reset      <= '0';
-                    motor_right_reset     <= '0';
-                    motor_left_direction  <= '0';
-                    motor_right_direction <= '0';
-                    turning               <= '1';
-                    skip_turn             <= '1';
+                else null;
                 end if;
-                            
             elsif (sensor_data = "001") then
                 motor_left_reset      <= '1';
                 motor_right_reset     <= '0';
@@ -125,7 +136,7 @@ begin
                 motor_right_direction <= '1';
             elsif (sensor_data = "111") then
                 --Station
-                if (stop_station = '1') then
+                if (next_direction = "11") then
                     motor_left_reset  <= '1';
                     motor_right_reset <= '1';
                 else
@@ -138,21 +149,20 @@ begin
                     skip_turn             <= '1';
                     skip_checkpoint       <= '0';
                 end if;
+            else null;
             end if;
             if (checkpoint = '1' and sensor_data = "101") then
                 checkpoint <= '0';
                 if (skip_checkpoint = '1') then
-                    skip_checkpoint <= '0';
+                    skip_checkpoint    <= '0';
+                    ask_next_direction <= '1';
                 else
                     skip_checkpoint    <= '1';
-                    ask_next_direction <= '1';
+                    ask_next_direction <= '0';
                 end if;
+            else null;
             end if;
-            if (new_direction = '1') then
-                ask_next_direction <= '0';
-            end if;
-            
-                
+        else null;
         end if;
     end process;
 

@@ -15,8 +15,17 @@ architecture structural of mine_tb is
             sensor_m_in : in std_logic;
             sensor_r_in : in std_logic;
 
+            sensor_mine : in std_logic;
+
             motor_l_pwm : out std_logic;
-            motor_r_pwm : out std_logic
+            motor_r_pwm : out std_logic;
+
+            rx   : in std_logic;
+            tx   : out std_logic;
+            led0 : out std_logic;
+            led1 : out std_logic;
+            led2 : out std_logic;
+            ledm : out std_logic
         );
     end component;
 
@@ -25,6 +34,8 @@ architecture structural of mine_tb is
     signal sensors                               : std_logic_vector(2 downto 0);
     signal motor_l_pwm, motor_r_pwm              : std_logic;
     signal sensor_mine                           : std_logic;
+    signal rx, tx                                : std_logic;
+    signal led0, led1, led2, ledm                : std_logic;
 
 begin
 
@@ -36,8 +47,20 @@ begin
         sensor_m_in => sensor_m_in,
         sensor_r_in => sensor_r_in,
 
+        sensor_mine => sensor_mine,
+
         motor_l_pwm => motor_l_pwm,
-        motor_r_pwm => motor_r_pwm
+        motor_r_pwm => motor_r_pwm,
+
+        rx => rx,
+        tx => tx,
+
+        led0 => led0,
+        led1 => led1,
+        led2 => led2,
+        ledm => ledm
+
+        
     );
 
     -- 20 ns - 50 MHz
@@ -45,13 +68,13 @@ begin
         '1' after 10 ns when clk /= '1' else '0' after 10 ns;
 
     reset <= '1' after 0 ns,
-        '0' after 40 ms;
+        '0' after 40 ns;
 
     sensors <= "000" after 0 ns, 
         "010" after 70 ms;
     
     sensor_mine <= '0' after 0 ns,
-        '1' after 50 us when sensor_mine /= '1' else '0' after 50 us;
+        '1' after 110 us when sensor_mine /= '1' else '0' after 110 us;
         
 
     sensor_l_in <= sensors(2);

@@ -52,6 +52,7 @@ begin
                 count           <= (others => '0');
                 mine_detected_i <= '0';
             else
+                count <= new_count;
                 if (mine_detected_i = '1') then
                     ledm <= '1';
                 else
@@ -62,7 +63,7 @@ begin
         end if;
 
         if (sensor_in_rise_event = '1') then
-            count <= new_count;
+            count           <= (others => '0');
         else
             mine_detected_i <= mine_detected_temp;
         end if;

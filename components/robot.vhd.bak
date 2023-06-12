@@ -66,8 +66,6 @@ architecture structural of robot is
             sensor_data    : in std_logic_vector(2 downto 0);
             next_direction : in std_logic_vector(1 downto 0);
 
-            mine_detected  : in std_logic;
-
             motor_l_reset     : out std_logic;
             motor_l_direction : out std_logic;
 
@@ -116,7 +114,8 @@ architecture structural of robot is
     signal motor_r_reset, motor_r_direction : std_logic;
     signal next_direction                   : std_logic_vector(1 downto 0);
     signal ask_next_direction               : std_logic;
-    signal sensor_m_out, mine_detected       : std_logic;
+    signal sensor_m_out, mine_detected      : std_logic;
+    signal sensor_mine_i		    :std_logic;
   
 begin
 
@@ -138,8 +137,6 @@ begin
 
         sensor_data    => sensor_data,
         next_direction => next_direction,
-
-        mine_detected  => mine_detected,
 
         motor_l_reset     => motor_l_reset,
         motor_l_direction => motor_l_direction,
@@ -191,7 +188,7 @@ begin
     inputbuffer_mine : m_inputbuffer
     port map(
         clk        => clk,
-        sensor_in  => sensor_mine,
+        sensor_in  => sensor_mine_i,
         sensor_out => sensor_m_out
     );
 
@@ -206,5 +203,6 @@ begin
 
     led0 <= ask_next_direction;
     led2 <= '0';
+    sensor_mine_i <= sensor_mine;
 
 end architecture structural;
