@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity robot is
     port (
@@ -56,7 +57,7 @@ architecture structural of robot is
         port (
             clk       : in std_logic;
             reset     : in std_logic;
-            count_out : out std_logic_vector(19 downto 0)
+            count_out : out unsigned(19 downto 0)
         );
     end component timebase;
 
@@ -65,7 +66,7 @@ architecture structural of robot is
             clk       : in std_logic;
             reset     : in std_logic;
             direction : in std_logic;
-            count_in  : in std_logic_vector(19 downto 0);
+            count_in  : in unsigned(19 downto 0);
             pwm       : out std_logic
         );
     end component motorcontrol;
