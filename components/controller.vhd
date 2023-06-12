@@ -139,6 +139,7 @@ begin
                     turning               <= '1';
                     skip_turn             <= '1';
                     skip_checkpoint       <= '0';
+                    ask_next_direction    <= '1';
                 end if;
             else null;
             end if;
