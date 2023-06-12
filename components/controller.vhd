@@ -32,21 +32,20 @@ begin
     begin
         if (rising_edge(clk)) then
             if (reset = '1') then
-                motor_left_reset   <= '1';
-                motor_right_reset  <= '1';
-                skip_checkpoint    <= '0';
-                checkpoint         <= '0';
-                drive              <= '0';
-                backwards          <= '0';
-                turning            <= '0';
-                skip_turn          <= '0';
-                ask_next_direction <= '0';
+                motor_left_reset  <= '1';
+                motor_right_reset <= '1';
+                skip_checkpoint   <= '1';
+                checkpoint        <= '0';
+                drive             <= '0';
+                backwards         <= '0';
+                turning           <= '0';
+                skip_turn         <= '0';
             elsif (drive = '0') then
                 motor_left_reset  <= '1';
                 motor_right_reset <= '1';
                 if (next_direction = "11") then
-                    drive              <= '1';
-                    ask_next_direction <= '1';
+                    drive           <= '1';
+                    skip_checkpoint <= '0';
                 else null;
                 end if;
             elsif (backwards = '1') then
@@ -146,11 +145,9 @@ begin
             if (checkpoint = '1' and sensor_data = "101") then
                 checkpoint <= '0';
                 if (skip_checkpoint = '1') then
-                    skip_checkpoint    <= '0';
-                    ask_next_direction <= '1';
+                    skip_checkpoint <= '0';
                 else
-                    skip_checkpoint    <= '1';
-                    ask_next_direction <= '0';
+                    skip_checkpoint <= '1';
                 end if;
             else null;
             end if;
@@ -163,5 +160,7 @@ begin
 
     motor_l_direction <= motor_left_direction;
     motor_r_direction <= motor_right_direction;
+
+    ask_next_direction <= not skip_checkpoint;
 
 end architecture behavioural;
