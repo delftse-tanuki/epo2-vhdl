@@ -141,7 +141,7 @@ begin
                 end if;
             else null;
             end if;
-            if (checkpoint = '1' and sensor_data = "101") then
+            if (checkpoint = '1' and sensor_data = "101" and drive = '1') then
                 checkpoint <= '0';
                 skip_checkpoint <= not skip_checkpoint;
             else null;
