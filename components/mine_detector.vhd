@@ -67,12 +67,10 @@ begin
     begin
         if (to_integer (count) >= 4900) then
             mine_detected_temp <= '1';
+        elsif (mine_detected_temp = '1' and to_integer(count) < 200) then
+            mine_detected_temp <= '1';
         else
-            if (mine_detected_temp = '1' and to_integer(count) < 200) then
-                mine_detected_temp <= '1';
-            else
-                mine_detected_temp <= '0';
-            end if;
+            mine_detected_temp <= '0';
         end if;
         new_count <= count + 1;
     end process;
