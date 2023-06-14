@@ -83,7 +83,7 @@ architecture structural of robot is
         port (
             clk       : in std_logic;
             reset     : in std_logic;
-            count_out : out unsigned (19 downto 0)
+            count_out : out unsigned(19 downto 0)
         );
     end component timebase;
 
@@ -92,7 +92,7 @@ architecture structural of robot is
             clk       : in std_logic;
             reset     : in std_logic;
             direction : in std_logic;
-            count_in  : in unsigned (19 downto 0);
+            count_in  : in unsigned(19 downto 0);
             pwm       : out std_logic
         );
     end component motorcontrol;
@@ -112,7 +112,7 @@ architecture structural of robot is
     end component uart_control;
 
     signal sensor_data                      : std_logic_vector(2 downto 0);
-    signal count_out                        : unsigned (19 downto 0);
+    signal count_out                        : unsigned(19 downto 0);
     signal motor_l_reset, motor_l_direction : std_logic;
     signal motor_r_reset, motor_r_direction : std_logic;
     signal next_direction                   : std_logic_vector(1 downto 0);
