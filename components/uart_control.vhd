@@ -7,6 +7,7 @@ entity uart_control is
         clk                : in std_logic;
         reset              : in std_logic;
         ask_next_direction : in std_logic;
+        mine_detected      : in std_logic;
 
         next_direction : out std_logic_vector(1 downto 0);
         led1           : out std_logic;
@@ -76,10 +77,10 @@ begin
                 write   <= '0';
                 written <= '1';
                 led1    <= '0';
-            elsif (ask_next_direction = '1' and written = '0') then
+            elsif ((ask_next_direction = '1' or mine_detected) and written = '0') then
                 write <= '1';
                 led1  <= '0';
-            elsif (ask_next_direction = '0') then
+            elsif (ask_next_direction = '0' and mine_detected) then
                 written <= '0';
                 led1    <= '0';
             else
@@ -116,5 +117,15 @@ begin
         end if;
     end process;
 
-    data_in <= "00100000";
+    process (ask_next_direction, mine_detected)
+    begin
+        if (ask_next_direction = '1') then
+            data_in <= "00000001";
+        elsif (mine_detected = '1') then
+            data_in <= "00000010";
+        else
+            data_in <= "00000000";
+        end if;
+    end process;
+
 end architecture;

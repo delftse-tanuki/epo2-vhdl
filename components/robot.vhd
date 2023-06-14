@@ -102,6 +102,7 @@ architecture structural of robot is
             clk                : in std_logic;
             reset              : in std_logic;
             ask_next_direction : in std_logic;
+            mine_detected      : in std_logic;
 
             next_direction : out std_logic_vector(1 downto 0);
             led1           : out std_logic;
@@ -163,6 +164,7 @@ begin
         clk                => clk,
         reset              => reset,
         ask_next_direction => ask_next_direction,
+        mine_detected      => mine_detected,
 
         next_direction => next_direction,
         led1           => led1,
