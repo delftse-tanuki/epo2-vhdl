@@ -116,6 +116,5 @@ begin
         end if;
     end process;
 
-    led1    <= '0';
     data_in <= "00100000";
 end architecture;
