@@ -25,20 +25,22 @@ begin
 
     process (state_re, sensor_in)
     begin
-        sensor_in_rise_event <= '0';
         case state_re is
             when sensor_in_low =>
                 if (sensor_in = '1') then
                     sensor_in_rise_event <= '1';
                     new_state_re         <= sensor_in_high;
                 else
-                    new_state_re <= sensor_in_low;
+                    new_state_re         <= sensor_in_low;
+                    sensor_in_rise_event <= '0';
                 end if;
             when sensor_in_high =>
                 if (sensor_in = '1') then
-                    new_state_re <= sensor_in_high;
+                    new_state_re         <= sensor_in_high;
+                    sensor_in_rise_event <= '1';
                 else
-                    new_state_re <= sensor_in_low;
+                    new_state_re         <= sensor_in_low;
+                    sensor_in_rise_event <= '0';
                 end if;
         end case;
     end process;
