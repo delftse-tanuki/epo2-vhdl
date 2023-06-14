@@ -53,31 +53,23 @@ begin
                 mine_detected_i <= '0';
             else
                 count <= new_count;
-                if (mine_detected_i = '1') then
-                    ledm <= '1';
-                else
-                    ledm <= '0';
-                end if;
+                ledm  <= mine_detected_i;
             end if;
-            
-       
         end if;
         if (sensor_in_rise_event = '1') then
             count           <= (others => '0');
             mine_detected_i <= mine_detected_temp;
         else null;
         end if;
-
-
     end process;
 
     process (count)
     begin
-        if ( to_integer (count) >= 4900) then
+        if (to_integer (count) >= 4900) then
             mine_detected_temp <= '1';
         else
             if (mine_detected_temp = '1' and to_integer(count) < 200) then
-            mine_detected_temp <= '1';
+                mine_detected_temp <= '1';
             else
                 mine_detected_temp <= '0';
             end if;
