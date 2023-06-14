@@ -26,8 +26,7 @@ architecture behavioural of controller is
     signal motor_left_reset, motor_right_reset         : std_logic;
     signal motor_left_direction, motor_right_direction : std_logic;
     signal skip_checkpoint, checkpoint, backwards      : std_logic;
-    signal turning, skip_turn                          : std_logic;
-    signal drive                                       : std_logic := '1';
+    signal turning, skip_turn, drive                   : std_logic;
 
 begin
 
