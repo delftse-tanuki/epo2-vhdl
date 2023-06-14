@@ -71,14 +71,19 @@ begin
             if (reset = '1') then
                 write   <= '0';
                 written <= '0';
+                led1    <= '0';
             elsif (write = '1') then
                 write   <= '0';
                 written <= '1';
+                led1    <= '0';
             elsif (ask_next_direction = '1' and written = '0') then
                 write <= '1';
+                led1  <= '0';
             elsif (ask_next_direction = '0') then
                 written <= '0';
-            else null;
+                led1    <= '0';
+            else
+                led1 <= '1';
             end if;
         else null;
         end if;
