@@ -35,12 +35,11 @@ begin
                     sensor_in_rise_event <= '0';
                 end if;
             when sensor_in_high =>
+                sensor_in_rise_event <= '0';
                 if (sensor_in = '1') then
-                    new_state_re         <= sensor_in_high;
-                    sensor_in_rise_event <= '1';
+                    new_state_re <= sensor_in_high;
                 else
-                    new_state_re         <= sensor_in_low;
-                    sensor_in_rise_event <= '0';
+                    new_state_re <= sensor_in_low;
                 end if;
         end case;
     end process;
