@@ -34,14 +34,15 @@ begin
     begin
         if (rising_edge(clk)) then
             if (reset = '1') then
-                motor_left_reset  <= '1';
-                motor_right_reset <= '1';
-                skip_checkpoint   <= '1';
-                checkpoint        <= '0';
-                drive             <= '0';
-                backwards         <= '0';
-                turning           <= '0';
-                skip_turn         <= '0';
+                motor_left_reset   <= '1';
+                motor_right_reset  <= '1';
+                skip_checkpoint    <= '1';
+                ask_next_direction <= '0';
+                checkpoint         <= '0';
+                drive              <= '0';
+                backwards          <= '0';
+                turning            <= '0';
+                skip_turn          <= '0';
             elsif (drive = '0') then
                 motor_left_reset  <= '1';
                 motor_right_reset <= '1';
@@ -60,7 +61,9 @@ begin
                 else null;
                 end if;
             elsif (mine_detected = '1') then
-                backwards <= '1';
+                backwards          <= '1';
+                skip_checkpoint    <= '0';
+                ask_next_direction <= '1';
             elsif (turning = '1') then
                 if (skip_turn = '1') then
                     if (sensor_data = "111") then
@@ -124,8 +127,9 @@ begin
                 motor_left_direction  <= '1';
                 motor_right_direction <= '0';
                 if (checkpoint = '1') then
-                    checkpoint      <= '0';
-                    skip_checkpoint <= not skip_checkpoint;
+                    checkpoint         <= '0';
+                    ask_next_direction <= skip_checkpoint;
+                    skip_checkpoint    <= not skip_checkpoint;
                 else null;
                 end if;
             elsif (sensor_data = "110") then
@@ -147,6 +151,7 @@ begin
                     turning               <= '1';
                     skip_turn             <= '1';
                     skip_checkpoint       <= '0';
+                    ask_next_direction    <= '1';
                 end if;
             else null;
             end if;
@@ -159,7 +164,5 @@ begin
 
     motor_l_direction <= motor_left_direction;
     motor_r_direction <= motor_right_direction;
-
-    ask_next_direction <= not skip_checkpoint;
 
 end architecture behavioural;
