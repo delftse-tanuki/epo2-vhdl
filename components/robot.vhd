@@ -138,7 +138,7 @@ begin
         reset => reset,
 
         sensor_data    => sensor_data,
-        next_direction => "01",
+        next_direction => next_direction,
 
         mine_detected  => mine_detected,
 
