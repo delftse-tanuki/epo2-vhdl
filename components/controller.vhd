@@ -59,6 +59,8 @@ begin
                     backwards <= '0';
                 else null;
                 end if;
+            elsif (mine_detected = '1') then
+                backwards <= '1';
             elsif (turning = '1') then
                 if (skip_turn = '1') then
                     if (sensor_data = "111") then
@@ -148,14 +150,6 @@ begin
                 end if;
             else null;
             end if;
-        else null;
-        end if;
-    end process;
-
-    process (mine_detected)
-    begin
-        if (mine_detected = '1') then
-            backwards <= '1';
         else null;
         end if;
     end process;
