@@ -71,10 +71,10 @@ begin
         '0' after 40 ns;
 
     sensors <= "000" after 0 ns, 
-        "010" after 70 ms;
+        "010" after 200 ns;
     
     sensor_mine <= '0' after 0 ns,
-        '1' after 110 us when sensor_mine /= '1' else '0' after 110 us;
+        '1' after 100 us when sensor_mine /= '1' else '0' after 100 us;
         
 
     sensor_l_in <= sensors(2);
