@@ -9,6 +9,8 @@ entity controller is
         sensor_data    : in std_logic_vector (2 downto 0);
         next_direction : in std_logic_vector (1 downto 0); -- 00 = straight, 01 = left, 10 = right, 11 = start/stop
 
+        mine_detected  : in std_logic;
+
         motor_l_reset     : out std_logic;
         motor_l_direction : out std_logic; -- 1 = forward, 0 = backwards
 
@@ -21,10 +23,11 @@ end entity controller;
 
 architecture behavioural of controller is
 
-    signal motor_left_reset, motor_right_reset, drive  : std_logic;
+    signal motor_left_reset, motor_right_reset  : std_logic;
     signal motor_left_direction, motor_right_direction : std_logic;
     signal skip_checkpoint, checkpoint, backwards      : std_logic;
     signal turning, skip_turn                          : std_logic;
+    signal drive                                       : std_logic := '1';
 
 begin
 
@@ -48,6 +51,11 @@ begin
                     skip_checkpoint <= '0';
                 else null;
                 end if;
+            elsif (mine_detected = '1') then
+                motor_left_reset      <= '0';
+                motor_right_reset     <= '0';
+                motor_left_direction  <= '0';
+                motor_right_direction <= '1';
             elsif (backwards = '1') then
                 motor_left_reset      <= '0';
                 motor_right_reset     <= '0';

@@ -11,6 +11,8 @@ entity robot is
         sensor_m_in : in std_logic;
         sensor_r_in : in std_logic;
 
+        sensor_mine : in std_logic;
+
         motor_l_pwm : out std_logic;
         motor_r_pwm : out std_logic;
 
@@ -18,7 +20,8 @@ entity robot is
         tx   : out std_logic;
         led0 : out std_logic;
         led1 : out std_logic;
-        led2 : out std_logic
+        led2 : out std_logic;
+        ledm : out std_logic
     );
 end entity robot;
 
@@ -35,6 +38,27 @@ architecture structural of robot is
         );
     end component;
 
+    component m_inputbuffer is
+        port (
+            clk : in std_logic;
+    
+            sensor_in : in std_logic;
+    
+            sensor_out  : out std_logic
+        );
+    end component m_inputbuffer;
+
+    component mine_detector is
+        port (
+            clk                     : in std_logic;
+            reset                   : in std_logic;
+            sensor_in               : in std_logic;
+            mine_detected           : out std_logic;
+            ledm                    : out std_logic
+            );
+    end component mine_detector;
+    
+
     component controller is
         port (
             clk   : in std_logic;
@@ -42,6 +66,8 @@ architecture structural of robot is
 
             sensor_data    : in std_logic_vector(2 downto 0);
             next_direction : in std_logic_vector(1 downto 0);
+
+            mine_detected  : in std_logic;
 
             motor_l_reset     : out std_logic;
             motor_l_direction : out std_logic;
@@ -91,6 +117,8 @@ architecture structural of robot is
     signal motor_r_reset, motor_r_direction : std_logic;
     signal next_direction                   : std_logic_vector(1 downto 0);
     signal ask_next_direction               : std_logic;
+    signal sensor_m_out, mine_detected       : std_logic;
+  
 begin
 
     comp1 : inputbuffer
@@ -110,7 +138,9 @@ begin
         reset => reset,
 
         sensor_data    => sensor_data,
-        next_direction => next_direction,
+        next_direction => "01",
+
+        mine_detected  => mine_detected,
 
         motor_l_reset     => motor_l_reset,
         motor_l_direction => motor_l_direction,
@@ -157,6 +187,22 @@ begin
         direction => motor_r_direction,
         count_in  => count_out,
         pwm       => motor_r_pwm
+    );
+
+    inputbuffer_mine : m_inputbuffer
+    port map(
+        clk        => clk,
+        sensor_in  => sensor_mine,
+        sensor_out => sensor_m_out
+    );
+
+    minedetector : mine_detector
+    port map(
+        clk => clk,
+        reset => reset,
+        sensor_in => sensor_m_out,
+        mine_detected => mine_detected,
+        ledm => ledm -- led om aan te geven als een mine detected '1' is.
     );
 
     led0 <= ask_next_direction;
