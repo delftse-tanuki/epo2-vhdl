@@ -206,6 +206,6 @@ begin
     );
 
     led0 <= ask_next_direction;
-    led2 <= '0';
+    led2 <= mine_detected;
 
 end architecture structural;
