@@ -44,9 +44,8 @@ begin
         end case;
     end process;
 
-    process (clk, sensor_in_rise_event)
+    process (clk, sensor_in_rise_event, mine_detected_temp)
     begin
-
         if (rising_edge(clk)) then
             if (reset = '1') then
                 ledm            <= '0';
@@ -64,7 +63,7 @@ begin
         end if;
     end process;
 
-    process (count)
+    process (count, mine_detected_temp)
     begin
         if (to_integer (count) >= 4900) then
             mine_detected_temp <= '1';
