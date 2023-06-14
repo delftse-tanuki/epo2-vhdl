@@ -14,12 +14,12 @@ end entity mine_detector;
 
 architecture behavioural of mine_detector is
 
-    signal count                : unsigned (13 downto 0);
-    signal new_count            : unsigned (13 downto 0);
-    signal mine_detected_temp   : std_logic;
-    signal mine_detected_i      : std_logic;
-    signal sensor_in_rise_event : std_logic;
     type state_type is (sensor_in_high, sensor_in_low);
+
+    signal count, new_count       : unsigned (13 downto 0);
+    signal mine_detected_temp     : std_logic;
+    signal mine_detected_i        : std_logic;
+    signal sensor_in_rise_event   : std_logic;
     signal state_re, new_state_re : state_type;
 begin
 
