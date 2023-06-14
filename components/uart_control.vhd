@@ -77,10 +77,10 @@ begin
                 write   <= '0';
                 written <= '1';
                 led1    <= '0';
-            elsif ((ask_next_direction = '1' or mine_detected) and written = '0') then
+            elsif ((ask_next_direction = '1' or mine_detected = '1') and written = '0') then
                 write <= '1';
                 led1  <= '0';
-            elsif (ask_next_direction = '0' and mine_detected) then
+            elsif (ask_next_direction = '0' and mine_detected = '0') then
                 written <= '0';
                 led1    <= '0';
             else
