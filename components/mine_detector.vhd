@@ -73,7 +73,7 @@ begin
 
     process (count)
     begin
-        if ( to_integer (count) >= 5000) then
+        if ( to_integer (count) >= 4900) then
             mine_detected_temp <= '1';
         else
             if (mine_detected_temp = '1' and to_integer(count) < 200) then
