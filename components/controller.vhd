@@ -50,11 +50,6 @@ begin
                     skip_checkpoint <= '0';
                 else null;
                 end if;
-            elsif (mine_detected = '1') then
-                motor_left_reset      <= '0';
-                motor_right_reset     <= '0';
-                motor_left_direction  <= '0';
-                motor_right_direction <= '1';
             elsif (backwards = '1') then
                 motor_left_reset      <= '0';
                 motor_right_reset     <= '0';
@@ -153,6 +148,14 @@ begin
                 end if;
             else null;
             end if;
+        else null;
+        end if;
+    end process;
+
+    process (mine_detected)
+    begin
+        if (mine_detected = '1') then
+            backwards <= '1';
         else null;
         end if;
     end process;
